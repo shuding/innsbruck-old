@@ -1,0 +1,74 @@
+/* Created by shuding on 5/6/16. */
+/* <ds303077135@gmail.com> */
+
+/* resets */
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 40px 0 0;
+  max-width: 1120px;
+  font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'pingfang', sans-serif;
+}
+
+a, a:visited {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  font-weight: 600;
+  color: #000BAE;
+}
+
+a:after {
+  content: '';
+  display: block;
+  height: 0.5em;
+  margin-top: -0.5em;
+  margin-left: -2px;
+  margin-right: -2px;
+}
+
+a:hover:after {
+  background: #FF3E2D;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+p {
+}
+
+article {
+  margin: 30px 0 40px;
+}
+
+input[type=text], textarea {
+  padding: 5px;
+  width: 100%;
+  font-weight: inherit;
+  font-size: inherit;
+  border: 1px solid #ccc;
+}
+
+textarea {
+  min-height: 20em;
+}
+
+.container {
+  margin: auto;
+  padding: 20px;
+  max-width: 720px;
+}
+
+.date {
+  font-weight: 100;
+  color: #ccc;
+}
+
+.pull-right {
+  float: right;
+}

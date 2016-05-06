@@ -1,0 +1,28 @@
+{
+  "name": "innsbruck",
+  "version": "0.0.1",
+  "description": "Another static blog generator",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quietshu/innsbruck"
+  },
+  "author": "Shu Ding <quietshu@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/quietshu/innsbruck/issues"
+  },
+  "homepage": "https://github.com/quietshu/innsbruck",
+  "dependencies": {
+    "koa": "^1.2.0",
+    "koa-body": "^1.4.0",
+    "koa-ejs": "^3.0.0",
+    "koa-route": "^2.4.2",
+    "koa-send": "^3.2.0",
+    "lowdb": "^0.12.5",
+    "marked": "^0.3.5"
+  }
+}

@@ -1,0 +1,14 @@
+<div>
+  <a href="/">< Back</a>
+  <article>
+    <h2><%= post.title %></h2>
+    <span class="date">Updated at <time><%= (new Date(post.time)).toLocaleString() %></time>
+      | <a href="/post/<%= post.link %>/edit">edit</a>
+      | <a href="javascript:;"
+           onclick='(prompt("Please enter \"OK\" to delete <%= post.title %>:") + "").toUpperCase() == "OK" && delete_form.submit();'>delete</a>
+    </span>
+    <p><%- marked(post.content) %></p>
+  </article>
+
+  <form id="delete_form" style="display: none" method="POST" action="/post/<%= post.link %>/delete"></form>
+</div>
