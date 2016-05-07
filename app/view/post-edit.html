@@ -1,12 +1,12 @@
 <div>
   <a href="/post/<%= post.link %>">< Back</a>
-  <form method="POST">
+  <form id="post_form" method="POST">
     <article>
-      <h2><input type="text" name="title" placeholder="post title" value="<%= post.title %>"></h2>
+      <h2><input type="text" name="title" placeholder="Title" value="<%= post.title %>" autocomplete="off"></h2>
       <p>
         <textarea name="content"><%= post.content %></textarea>
       </p>
     </article>
-    <input type="submit" value="Save">
+    <a href="javascript:;" onclick="post_form.submit()">Save</a>
   </form>
 </div>

@@ -9,7 +9,7 @@
 }
 
 body {
-  margin: 40px 0 0;
+  margin: 40px 0;
   max-width: 1120px;
   font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'pingfang', sans-serif;
 }
@@ -27,19 +27,21 @@ a:after {
   display: block;
   height: 0.5em;
   margin-top: -0.5em;
-  margin-left: -2px;
-  margin-right: -2px;
+  margin-left: -3px;
+  margin-right: -3px;
 }
 
 a:hover:after {
   background: #FF3E2D;
 }
 
-h2 {
-  margin-bottom: 10px;
+a:focus {
+  color: #2b2eff;
+  outline: none;
 }
 
-p {
+h2 {
+  margin-bottom: 10px;
 }
 
 article {
@@ -58,6 +60,17 @@ textarea {
   min-height: 20em;
 }
 
+hr {
+  border: none;
+  border-bottom: 1px solid #ccc;
+}
+
+footer {
+  margin-top: 200px;
+  font-size: 15px;
+  color: #ccc;
+}
+
 .container {
   margin: auto;
   padding: 20px;
@@ -65,10 +78,49 @@ textarea {
 }
 
 .date {
-  font-weight: 100;
   color: #ccc;
 }
 
 .pull-right {
   float: right;
+}
+
+.input-group {
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  margin: 30px 0;
+}
+
+.input-group > h5 {
+  flex-basis: 100px;
+  -webkit-flex-basis: 100px;
+  margin: 0;
+  line-height: 1.5em;
+}
+
+.input-group > p {
+  flex: 1;
+  -webkit-flex: 1;
+  margin: 0 0 0 15px;
+}
+
+.blog-name {
+  margin: 0 0 20px;
+}
+
+.title-overflow > h2 {
+  overflow: hidden;
+  padding-left: 3px;
+  padding-right: 15px;
+  margin-left: -3px;
+}
+
+.title-overflow > h2 > a {
+  max-width: 100%;
+  padding: 0 3px;
+  margin: 0 -3px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

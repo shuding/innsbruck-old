@@ -1,22 +1,32 @@
 <div>
-  <a href="/post/new">+ New Post</a>
-  <span class="date"> | </span>
-  <a class="pull-right" href="/setting">ƒ Settings</a>
+  <h1 class="blog-name" aria-label="Blog name" title="<%= blog.name %>"><%= blog.name %></h1>
+  <a href="/post/new">+ Post</a>
+  <span> &nbsp; </span>
+  <a href="/page/new">+ Page</a>
+  <a class="pull-right" href="/settings">Settings</a>
   <% for (var i = 0; i < posts.length; i++) { %>
     <article>
-      <span class="date pull-right"><time><%= (new Date(posts[i].time)).toLocaleString() %></time></span>
-      <h2>
-        <a href="/post/<%= posts[i].link %>"
-           title="<%= posts[i].title %>"
-           aria-label="Title">
-          <%= posts[i].title %>
-        </a>
-      </h2>
+      <div class="title-overflow">
+        <span class="date pull-right"><time><%= (new Date(posts[i].time)).toLocaleString() %></time></span>
+        <h2>
+          <a href="/post/<%= posts[i].link %>"
+             title="<%= posts[i].title %>"
+             aria-label="Title">
+            <%= posts[i].title %>
+          </a>
+        </h2>
+      </div>
       <% if (posts[i].content.length <= 100) { %>
-        <p><%= posts[i].content %></p>
+      <p><%= posts[i].content %></p>
       <% } else { %>
-        <p><%= posts[i].content.substr(0, 80) %> ...</p>
+      <p><%= posts[i].content.substr(0, 80) %> ...</p>
       <% } %>
     </article>
+  <% } %>
+  <% if (current > 1) { %>
+    <a href="/p/<%= current - 1 %>">< Previous Page</a>
+  <% } %>
+  <% if (current < total) { %>
+    <a href="/p/<%= current + 1 %>" class="pull-right">Next Page ></a>
   <% } %>
 </div>

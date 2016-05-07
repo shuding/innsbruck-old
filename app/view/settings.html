@@ -1,0 +1,30 @@
+<div>
+  <a href="/">< Back</a>
+  <form id="settings_form" method="POST" action="/settings">
+    <article>
+      <div class="input-group">
+        <h5>Blog Name</h5>
+        <p><input type="text" name="name" placeholder="" value="<%= blog.name %>" autocomplete="off"></p>
+      </div>
+      <div class="input-group">
+        <h5>Posts per Page</h5>
+        <p><input type="text" name="pagination" placeholder="1 ≤ P ≤ 100" value="<%= blog.pagination %>" autocomplete="off"></p>
+      </div>
+      <div class="input-group">
+        <h5>Footer Text</h5>
+        <p><input type="text" name="footer" placeholder="Copyright" value="<%= blog.footer %>" autocomplete="off"></p>
+      </div>
+      <hr>
+      <div class="input-group">
+        <h5>Google Analytics</h5>
+        <p><input type="text" name="google-analytics" placeholder="ID" value="<%= blog['google-analytics'] %>" disabled aria-disabled="true"></p>
+      </div>
+      <div class="input-group">
+        <h5>Disqus</h5>
+        <p><input type="text" name="disqus" placeholder="Disqus" value="<%= blog.disqus %>" disabled aria-disabled="true"></p>
+      </div>
+      <br/>
+      <a href="javascript:;" onclick="settings_form.submit()">Save</a>
+    </article>
+  </form>
+</div>
