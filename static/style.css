@@ -41,6 +41,14 @@ a:focus {
   outline: none;
 }
 
+p {
+  line-height: 1.5em;
+}
+
+blockquote {
+  font-style: italic;
+}
+
 h2 {
   margin-bottom: 10px;
 }

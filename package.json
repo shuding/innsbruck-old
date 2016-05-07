@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/quietshu/innsbruck",
   "dependencies": {
+    "ejs": "^2.4.1",
     "koa": "^1.2.0",
     "koa-body": "^1.4.0",
     "koa-ejs": "^3.0.0",

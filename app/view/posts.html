@@ -11,19 +11,11 @@
       <div class="title-overflow">
         <span class="date pull-right"><time><%= (new Date(posts[i].time)).toLocaleString() %></time></span>
         <h2>
-          <% if (!static) { %>
-            <a href="post/<%= posts[i].link %>"
-               title="<%= posts[i].title %>"
-               aria-label="Title">
-              <%= posts[i].title %>
-            </a>
-          <% } else { %>
-            <a href="static/<%= posts[i].link %>.html"
-               title="<%= posts[i].title %>"
-               aria-label="Title">
-              <%= posts[i].title %>
-            </a>
-          <% } %>
+          <a href="post/<%= posts[i].link %><%= static ? '.html' : '' %>"
+             title="<%= posts[i].title %>"
+             aria-label="Title">
+            <%= posts[i].title %>
+          </a>
         </h2>
       </div>
       <% if (posts[i].content.length <= 100) { %>

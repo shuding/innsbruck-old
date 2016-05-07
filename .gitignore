@@ -3,3 +3,9 @@ node_modules
 npm-debug.log
 
 db.json
+
+.DS_Store
+
+index.html
+
+post

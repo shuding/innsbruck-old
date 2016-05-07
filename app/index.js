@@ -6,9 +6,9 @@
 const path = require('path');
 
 // lowdb
-const low = require('lowdb');
+const low     = require('lowdb');
 const storage = require('lowdb/file-sync');
-const db = low('db.json', { storage });
+const db      = low('db.json', {storage});
 
 // markd
 const marked = require('marked');
@@ -17,75 +17,111 @@ const marked = require('marked');
 const koa = require('koa');
 
 // middleware
-const route = require('koa-route');
+const route  = require('koa-route');
 const render = require('koa-ejs');
-const body = require('koa-body');
-const send = require('koa-send');
+const body   = require('koa-body');
+const send   = require('koa-send');
 
 // generate static site
-const gen = require('./gen');
+//import { save, generate } from './gen';
+// ^not supported yet :(
+const { save, generate } = require('./gen');
 
 let app = koa();
 
 render(app, {
-  root: path.join(__dirname, 'view'),
-  layout: 'layout',
+  root:    path.join(__dirname, 'view'),
+  layout:  'layout',
   viewExt: 'html',
-  cache: false
+  cache:   false
 });
 
 app.use(body());
 
 // view routes
 app.use(route.get('/', function *() {
-  yield this.render('posts', {static: false, posts: postAll(1), blog: blogInfo(), current: 1, total: postPageCnt()});
+  yield this.render('posts', {
+    static:  false,
+    posts:   postAll(1),
+    blog:    blogInfo(),
+    current: 1,
+    total:   postPageCnt()
+  });
 }));
 
 app.use(route.get('/p/:cnt', function *(cnt) {
-  if (cnt == '1')
+  if (cnt == '1') {
     return this.redirect('/');
-  yield this.render('posts', {static: false, posts: postAll(+cnt), blog: blogInfo(), current: +cnt, total: postPageCnt()});
+  }
+  yield this.render('posts', {
+    static:  false,
+    posts:   postAll(+cnt),
+    blog:    blogInfo(),
+    current: +cnt,
+    total:   postPageCnt()
+  });
 }));
 
 app.use(route.get('/settings', function *() {
-  yield this.render('settings', {static: false, blog: blogInfo()});
+  yield this.render('settings', {
+    static: false,
+    blog:   blogInfo()
+  });
 }));
 
 app.use(route.get('/post/new', function *() {
-  yield this.render('post-new', {static: false, blog: blogInfo()});
+  yield this.render('post-new', {
+    static: false,
+    blog:   blogInfo()
+  });
 }));
 
 app.use(route.get('/post/:link', function *(link) {
-  yield this.render('post', {static: false, post: post(link), marked: marked, blog: blogInfo()});
+  yield this.render('post', {
+    static: false,
+    post:   post(link),
+    marked: marked,
+    blog:   blogInfo()
+  });
 }));
 
 /**
  * Create a post
  */
 app.use(route.post('/post/new', function *() {
-  let title = this.request.body.title;
+  let title   = this.request.body.title;
   let content = this.request.body.content;
   if (!title || !title.length) {
     this.status = 406;
     return this.body = 'Post title cannot be empty!';
   }
 
-  let id = (+db.object.id || 0) + 1;
+  let id       = (+db.object.id || 0) + 1;
   db.object.id = id;
   db('posts').push({
-    title,
-    content,
+          title,
+          content,
     link: '' + id,
     time: (new Date()).getTime()
   });
   this.redirect('/');
 
-  // TODO: write a better ejs render function
-  yield this.render('posts', {static: true, posts: postAll(1), blog: blogInfo(), current: 1, total: postPageCnt()});
-  gen('index', this.body);
+  // write index.html
+  save('index', generate.apply(this, ['posts', {
+    static:  true,
+    posts:   postAll(1),
+    blog:    blogInfo(),
+    current: 1,
+    total:   postPageCnt()
+  }]));
 
-  yield this.render('post', {static: true, post: post('' + id), marked, blog: blogInfo()});
-  gen('static/' + id, this.body);
+  // write post/:id.html
+  save('post/' + link, generate.apply(this, ['post', {
+    static: true,
+    post:   post('' + id),
+    marked: marked,
+    blog:   blogInfo()
+  }]));
 }));
 
 /**
@@ -95,9 +131,14 @@ app.use(route.post('/post/:link/delete', function *(link) {
   db('posts').remove({link});
   this.redirect('/');
 
-  // TODO: write a better ejs render function
-  yield this.render('posts', {static: true, posts: postAll(1), blog: blogInfo(), current: 1, total: postPageCnt()});
-  gen('index', this.body);
+  // write index.html
+  save('index', generate.apply(this, ['posts', {
+    static:  true,
+    posts:   postAll(1),
+    blog:    blogInfo(),
+    current: 1,
+    total:   postPageCnt()
+  }]));
 }));
 
 /**
@@ -106,24 +147,40 @@ app.use(route.post('/post/:link/delete', function *(link) {
 app.use(route.post('/post/:link/edit', function *(link) {
   db('posts').remove({link});
   db('posts').push({
-    title: this.request.body.title,
+    title:   this.request.body.title,
     content: this.request.body.content,
-    link: link,
-    time: (new Date()).getTime()
+    link:    link,
+    time:    (new Date()).getTime()
   });
   this.redirect('/post/' + link);
 
-  // TODO: write a better ejs render function
-  yield this.render('posts', {static: true, posts: postAll(1), blog: blogInfo(), current: 1, total: postPageCnt()});
-  gen('index', this.body);
+  // write index.html
+  save('index', generate.apply(this, ['posts', {
+    static:  true,
+    posts:   postAll(1),
+    blog:    blogInfo(),
+    current: 1,
+    total:   postPageCnt()
+  }]));
+
+  // write post/:id.html
+  save('post/' + link, generate.apply(this, ['post', {
+    static: true,
+    post:   post(link),
+    marked: marked,
+    blog:   blogInfo()
+  }]));
 }));
 
+/**
+ * Edit settings
+ */
 app.use(route.post('/settings', function *() {
-  let name = this.request.body.name;
-  let pagination = this.request.body.pagination;
-  let footer = this.request.body.footer;
+  let name            = this.request.body.name;
+  let pagination      = this.request.body.pagination;
+  let footer          = this.request.body.footer;
   let googleAnalytics = this.request.body['google-analytics'];
-  let disqus = this.request.body.disqus;
+  let disqus          = this.request.body.disqus;
 
   if (!name || !name.length) {
     this.status = 406;
@@ -144,29 +201,33 @@ app.use(route.post('/settings', function *() {
   }
 
   db.object.blog = {
-    name: name,
-    footer: footer,
-    pagination: pagination,
+    name:               name,
+    footer:             footer,
+    pagination:         pagination,
     'google-analytics': googleAnalytics || '',
-    disqus: disqus || ''
+    disqus:             disqus || ''
   };
 
   this.redirect('back');
 }));
 
 app.use(route.get('/post/:link/edit', function *(link) {
-  yield this.render('post-edit', {static: false, post: post(link), blog: blogInfo()});
+  yield this.render('post-edit', {
+    static: false,
+    post:   post(link),
+    blog:   blogInfo()
+  });
 }));
 
 // static files
 app.use(route.get('/style', function *() {
-  yield send(this, path.join('app', 'style.css'));
+  yield send(this, path.join('static', 'style.css'));
 }));
 
 // api functions
 function postAll(page) {
   let pagination = db('blog').value().pagination;
-  page = page || 1;
+  page           = page || 1;
   return db('posts').chain().orderBy('time', 'desc').take(page * pagination).takeRight(pagination).value();
 }
 
@@ -186,11 +247,11 @@ function blogInfo() {
 // init db
 if (typeof db.object.blog === 'undefined') {
   db.object.blog = {
-    name: 'innsbruck',
-    footer: 'copyright 2016 © innsbruck',
-    pagination: 10,
+    name:               'innsbruck',
+    footer:             'copyright 2016 © innsbruck',
+    pagination:         10,
     'google-analytics': '',
-    disqus: ''
+    disqus:             ''
   };
 }
 
