@@ -22,6 +22,9 @@ const render = require('koa-ejs');
 const body = require('koa-body');
 const send = require('koa-send');
 
+// generate static site
+const gen = require('./gen');
+
 let app = koa();
 
 render(app, {
@@ -35,27 +38,30 @@ app.use(body());
 
 // view routes
 app.use(route.get('/', function *() {
-  yield this.render('posts', {posts: postAll(1), blog: blogInfo(), current: 1, total: postPageCnt()});
+  yield this.render('posts', {static: false, posts: postAll(1), blog: blogInfo(), current: 1, total: postPageCnt()});
 }));
 
 app.use(route.get('/p/:cnt', function *(cnt) {
   if (cnt == '1')
     return this.redirect('/');
-  yield this.render('posts', {posts: postAll(+cnt), blog: blogInfo(), current: +cnt, total: postPageCnt()});
+  yield this.render('posts', {static: false, posts: postAll(+cnt), blog: blogInfo(), current: +cnt, total: postPageCnt()});
 }));
 
 app.use(route.get('/settings', function *() {
-  yield this.render('settings', {blog: blogInfo()});
+  yield this.render('settings', {static: false, blog: blogInfo()});
 }));
 
 app.use(route.get('/post/new', function *() {
-  yield this.render('post-new', {blog: blogInfo()});
+  yield this.render('post-new', {static: false, blog: blogInfo()});
 }));
 
 app.use(route.get('/post/:link', function *(link) {
-  yield this.render('post', {post: post(link), marked: marked, blog: blogInfo()});
+  yield this.render('post', {static: false, post: post(link), marked: marked, blog: blogInfo()});
 }));
 
+/**
+ * Create a post
+ */
 app.use(route.post('/post/new', function *() {
   let title = this.request.body.title;
   let content = this.request.body.content;
@@ -73,13 +79,30 @@ app.use(route.post('/post/new', function *() {
     time: (new Date()).getTime()
   });
   this.redirect('/');
+
+  // TODO: write a better ejs render function
+  yield this.render('posts', {static: true, posts: postAll(1), blog: blogInfo(), current: 1, total: postPageCnt()});
+  gen('index', this.body);
+
+  yield this.render('post', {static: true, post: post('' + id), marked, blog: blogInfo()});
+  gen('static/' + id, this.body);
 }));
 
+/**
+ * Delete a post
+ */
 app.use(route.post('/post/:link/delete', function *(link) {
   db('posts').remove({link});
   this.redirect('/');
+
+  // TODO: write a better ejs render function
+  yield this.render('posts', {static: true, posts: postAll(1), blog: blogInfo(), current: 1, total: postPageCnt()});
+  gen('index', this.body);
 }));
 
+/**
+ * Edit a post
+ */
 app.use(route.post('/post/:link/edit', function *(link) {
   db('posts').remove({link});
   db('posts').push({
@@ -89,6 +112,10 @@ app.use(route.post('/post/:link/edit', function *(link) {
     time: (new Date()).getTime()
   });
   this.redirect('/post/' + link);
+
+  // TODO: write a better ejs render function
+  yield this.render('posts', {static: true, posts: postAll(1), blog: blogInfo(), current: 1, total: postPageCnt()});
+  gen('index', this.body);
 }));
 
 app.use(route.post('/settings', function *() {
@@ -128,7 +155,7 @@ app.use(route.post('/settings', function *() {
 }));
 
 app.use(route.get('/post/:link/edit', function *(link) {
-  yield this.render('post-edit', {post: post(link), blog: blogInfo()});
+  yield this.render('post-edit', {static: false, post: post(link), blog: blogInfo()});
 }));
 
 // static files
