@@ -116,7 +116,7 @@ app.use(route.post('/post/new', function *() {
   }]));
 
   // write post/:id.html
-  save('post/' + link, generate.apply(this, ['post', {
+  save('post/' + id, generate.apply(this, ['post', {
     static: true,
     post:   post('' + id),
     marked: marked,
