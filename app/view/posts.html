@@ -1,17 +1,27 @@
 <div>
-  <h1 class="blog-name" aria-label="Blog name" title="<%= blog.name %>"><%= blog.name %></h1>
+
   <% if (!static) { %>
     <a href="/post/new">+ Post</a>
     <span> &nbsp; </span>
     <a href="/page/new">+ Page</a>
     <a class="pull-right" href="/settings">Settings</a>
+    <br/><br/>
   <% } %>
+
+  <h1 class="blog-name" aria-label="Blog name" title="<%= blog.name %>"><%= blog.name %></h1>
+
+  <nav>
+    <% for (var i = 0; i < pages.length; i++) { %>
+      <a class="page-menu" href="/<%= pages[i].link %>"><%= pages[i].title %></a>
+    <% } %>
+  </nav>
+
   <% for (var i = 0; i < posts.length; i++) { %>
     <article>
       <div class="title-overflow">
         <span class="date pull-right"><time><%= (new Date(posts[i].time)).toLocaleString() %></time></span>
         <h2>
-          <a href="post/<%= posts[i].link %><%= static ? '.html' : '' %>"
+          <a href="/post/<%= posts[i].link %><%= static ? '.html' : '' %>"
              title="<%= posts[i].title %>"
              aria-label="Title">
             <%= posts[i].title %>
@@ -25,10 +35,12 @@
       <% } %>
     </article>
   <% } %>
-  <% if (current > 1) { %>
-    <a href="p/<%= current - 1 %>">< Previous Page</a>
+  <% if (current == 2) { %>
+    <a href="/">< Previous Page</a>
+  <% } else if (current > 1) { %>
+    <a href="/p/<%= current - 1 %>">< Previous Page</a>
   <% } %>
   <% if (current < total) { %>
-    <a href="p/<%= current + 1 %>" class="pull-right">Next Page ></a>
+    <a href="/p/<%= current + 1 %>" class="pull-right">Next Page ></a>
   <% } %>
 </div>

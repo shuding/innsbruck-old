@@ -2,7 +2,7 @@
   <a href="/">< Back</a>
   <article>
     <h2><%= post.title %></h2>
-    <span class="date"><%= blog.name %>, updated at <time><%= (new Date(post.time)).toLocaleString() %></time>
+    <span class="date"><%= blog.name %>, <time><%= (new Date(post.time)).toLocaleString() %></time>
       <% if (!static) { %>
         | <a href="/post/<%= post.link %>/edit">edit</a>
         | <a href="javascript:;"

@@ -19,9 +19,21 @@ A minimal, static, content focused and super light weighted blogging tool. For h
 
 TODO.
 
+## changelog
+
+TODO.
+
 ## demo
 
 http://quietshu.github.io/
+
+## other
+
+- Accessibility
+- Custom CSS
+- Google Analytics
+- Disqus
+- ~~Supports `<noscript>` tag~~
 
 ## acknowledgements
 

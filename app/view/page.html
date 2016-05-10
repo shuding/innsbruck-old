@@ -1,0 +1,15 @@
+<div>
+  <article>
+    <h1><%= page.title %></h1>
+      <% if (!static) { %>
+        <a href="/page/<%= page.link %>/edit">edit</a>
+        | <a href="javascript:;"
+             onclick='(prompt("Please enter \"OK\" to delete \"<%= page.title %>\":") + "").toUpperCase() == "OK" && delete_form.submit();'>delete</a>
+      <% } %>
+    </span>
+    <p><%- marked(page.content) %></p>
+  </article>
+  <a href="/">< <%= blog.name %></a>
+
+  <form id="delete_form" style="display: none" method="POST" action="/page/<%= page.link %>/delete"></form>
+</div>

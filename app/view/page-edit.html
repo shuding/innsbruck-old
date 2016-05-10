@@ -1,0 +1,18 @@
+<div>
+  <a href="/">< Back</a>
+  <form id="page_form" action="/page/<%= page.link %>/edit" method="POST">
+    <article>
+      <h2><input type="text" name="title" placeholder="Title" autocomplete="off" value="<%= page.title %>"></h2>
+      <p style="display: flex; display: -webkit-flex">
+        <span style="padding: 5px 5px 5px 0; color: #ccc">http://your.blog/</span><input class="inline-input" style="flex: 1; -webkit-flex: 1" type="text" name="link" placeholder="link" value="<%= page.link %>" autocomplete="off">
+      </p>
+      <p>
+        <textarea name="content"><%= page.content %></textarea>
+      </p>
+      <p style="display: flex; display: -webkit-flex">
+        <span style="padding: 5px 5px 5px 0; color: #ccc">Menu display order: </span><input class="inline-input" style="flex: 1; -webkit-flex: 1" type="text" name="order" placeholder="...-2, -1, 0, 1, 2..." value="<%= page.order %>" autocomplete="off">
+      </p>
+    </article>
+    <input type="submit" value="Save">
+  </form>
+</div>

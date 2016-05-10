@@ -9,11 +9,17 @@ const basedir = path.join(__dirname, '..');
 
 const ejs = require('ejs');
 
-module.exports.save = save;
+module.exports.save     = save;
 module.exports.generate = generate;
 
 function logStaticFile(file) {
   console.log(`Page ${file} generated successfully.`);
+}
+
+function createDir(dir) {
+  if (!fs.existsSync(path.join(basedir, dir))) {
+    fs.mkdirSync(path.join(basedir, dir));
+  }
 }
 
 function save(file, content) {
@@ -21,27 +27,30 @@ function save(file, content) {
     fs.writeFile(path.join(basedir, 'index.html'), content);
     logStaticFile('index.html');
   } else if (file.startsWith('post/')) {
-    if (!fs.existsSync(path.join(basedir, 'post'))) {
-      fs.mkdirSync(path.join(basedir, 'post'));
-    }
+    createDir('post');
 
-    fs.writeFile(path.join(basedir, 'post', path.parse(file).name + '.html'), content);
+    fs.writeFile(path.join(basedir, file + '.html'), content);
+    logStaticFile(file + '.html');
+  } else if (file.startsWith('p/')) {
+    createDir('p');
+
+    fs.writeFile(path.join(basedir, file + '.html'), content);
     logStaticFile(file + '.html');
   }
 }
 
 function generate(template, context) {
   let viewPath = path.join(__dirname, 'view', template + '.html');
-  let tpl = fs.readFileSync(viewPath, 'utf8');
-  let fn = ejs.compile(tpl, {
+  let tpl      = fs.readFileSync(viewPath, 'utf8');
+  let fn       = ejs.compile(tpl, {
     filename: viewPath
   });
 
   context.body = fn(context);
 
   viewPath = path.join(__dirname, 'view', 'layout.html');
-  tpl = fs.readFileSync(viewPath, 'utf8');
-  fn = ejs.compile(tpl, {
+  tpl      = fs.readFileSync(viewPath, 'utf8');
+  fn       = ejs.compile(tpl, {
     filename: viewPath
   });
 
