@@ -10,9 +10,13 @@
 
 body {
   margin: 40px 0;
-  max-width: 1120px;
+  max-width: 1280px;
   font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'PingFang SC', 'PingFang TC', 'PingFang HK', 'Microsoft YaHei', sans-serif;
+  font-weight: normal;
+  font-size: 15px;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background: white;
 }
 
 a, a:visited, input[type=submit] {
@@ -21,6 +25,13 @@ a, a:visited, input[type=submit] {
   text-decoration: none;
   font-weight: 600;
   color: #000BAE;
+
+  /* wrapping settings */
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
 }
 
 a:after {
@@ -66,9 +77,11 @@ input[type=submit]:hover {
 
 p {
   line-height: 1.5em;
+  margin-bottom: 1.2em;
 }
 
 blockquote {
+  margin-bottom: 2em;
   font-style: italic;
 }
 
@@ -103,7 +116,8 @@ textarea {
 
 hr {
   border: none;
-  border-bottom: 1px solid #ccc;
+  margin: 2em 0;
+  border-bottom: 1px solid #000;
 }
 
 nav {
@@ -145,10 +159,26 @@ footer {
   color: #ccc;
 }
 
+li { line-height: 1.4em; margin-bottom: 0.5em; }
+li > p { margin: 0; }
+ul { margin: 0; }
+dt { font-weight: bold; }
+dd { margin-bottom: 0.5em; }
+
+h1 { font-size: 200%; }
+h2 { font-size: 160%; }
+h3 { font-size: 120%; }
+h4 { font-size: 100%; }
+h5 { font-size: 80%; }
+h6 { font-size: 80%; font-weight: normal; }
+h1, h2, h3, h4, h5, h6 { margin-top: 1.4em; }
+
+pre { overflow: scroll; }
+
 .container {
   margin: auto;
   padding: 20px;
-  max-width: 720px;
+  max-width: 680px;
 }
 
 .date {
@@ -188,6 +218,7 @@ footer {
   padding-left: 3px;
   padding-right: 15px;
   margin-left: -3px;
+  margin-bottom: 0;
 }
 
 .title-overflow > h2 > a {

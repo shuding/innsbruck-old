@@ -76,18 +76,18 @@ app.use(route.get('/settings', function *() {
   });
 }));
 
+app.use(route.get('/post/new', function *() {
+  yield this.render('post-new', {
+    static: false,
+    blog:   blogInfo()
+  });
+}));
+
 app.use(route.get('/post/:link', function *(link) {
   yield this.render('post', {
     static: false,
     post:   post(link),
     marked: marked,
-    blog:   blogInfo()
-  });
-}));
-
-app.use(route.get('/post/new', function *() {
-  yield this.render('post-new', {
-    static: false,
     blog:   blogInfo()
   });
 }));
@@ -147,7 +147,7 @@ app.use(route.post('/post/new', function *() {
   this.redirect('/');
 
   saveIndex();
-  savePost(id);
+  savePost('' + id);
 }));
 
 /**

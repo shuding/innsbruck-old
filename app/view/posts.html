@@ -12,7 +12,7 @@
 
   <nav>
     <% for (var i = 0; i < pages.length; i++) { %>
-      <a class="page-menu" href="/<%= pages[i].link %>"><%= pages[i].title %></a>
+      <a class="page-menu" href="/<%= pages[i].link %><%= static ? '.html' : '' %>"><%= pages[i].title %></a>
     <% } %>
   </nav>
 
