@@ -36,6 +36,9 @@ function save(file, content) {
 
     fs.writeFile(path.join(basedir, file + '.html'), content);
     logStaticFile(file + '.html');
+  } else if (file.startsWith('page/')) {
+    fs.writeFile(path.join(basedir, file.substr(5) + '.html'), content);
+    logStaticFile(file.substr(5) + '.html');
   }
 }
 

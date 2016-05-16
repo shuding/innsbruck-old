@@ -198,7 +198,7 @@ app.use(route.post('/page/new', function *() {
     this.status = 406;
     return this.body = 'This link already exists!';
   }
-  if (['post', 'p', 'style', 'static'].includes(link) || !/^[a-zA-Z0-9_]+$/.test(link)) {
+  if (['post', 'p', 'style', 'static', 'index'].includes(link) || !/^[a-zA-Z0-9_]+$/.test(link)) {
     this.status = 406;
     return this.body = 'Illegal link!';
   }
@@ -214,6 +214,58 @@ app.use(route.post('/page/new', function *() {
   this.redirect('/');
 
   saveIndex();
+  savePage(link);
+}));
+
+/**
+ * Delete a page
+ */
+app.use(route.post('/page/:link/delete', function *(link) {
+  db('pages').remove({link});
+  this.redirect('/');
+
+  saveIndex();
+}));
+
+/**
+ * Edit a page
+ */
+app.use(route.post('/page/:link/edit', function *(link) {
+  let title   = this.request.body.title;
+  let content = this.request.body.content;
+  let newLink = this.request.body.link;
+  let order   = this.request.body.order;
+  if (!title || !title.length) {
+    this.status = 406;
+    return this.body = 'Page title cannot be empty!';
+  }
+  if (!newLink || !newLink.length) {
+    this.status = 406;
+    return this.body = 'Page link cannot be empty!';
+  }
+  if (newLink != link && db('pages').find({newLink})) {
+    this.status = 406;
+    return this.body = 'This link already exists!';
+  }
+  if (['post', 'p', 'style', 'static', 'index'].includes(newLink) || !/^[a-zA-Z0-9_]+$/.test(newLink)) {
+    this.status = 406;
+    return this.body = 'Illegal link!';
+  }
+
+  order = +order;
+
+  db('pages').remove({link});
+
+  db('pages').push({
+           title,
+           content,
+           link: newLink,
+    order: order || 0 // filter NaN
+  });
+  this.redirect('/');
+
+  saveIndex();
+  savePage(newLink);
 }));
 
 /**
@@ -278,7 +330,7 @@ function postPageCnt() {
 }
 
 function pageAll() {
-  return db('pages').chain().orderBy('order', 'desc').value();
+  return db('pages').chain().orderBy('order', 'asc').value();
 }
 
 function page(link) {
@@ -337,6 +389,16 @@ function saveAllPosts() {
       blog:   b
     }));
   }
+}
+
+function savePage(link) {
+  // write :link.html
+  save('page/' + link, generate('page', {
+    static: true,
+    page:   page(link),
+    marked: marked,
+    blog:   blogInfo()
+  }));
 }
 
 // init db

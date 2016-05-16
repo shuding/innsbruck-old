@@ -120,6 +120,7 @@ nav {
 nav > a {
   line-height: 64px;
   min-width: 64px;
+  margin-left: 20px;
   text-align: center;
   overflow: hidden;
   white-space: nowrap;

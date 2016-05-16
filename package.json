@@ -1,5 +1,5 @@
 {
-  "name": "innsbruck",
+  "name": "innsbruck-blog",
   "version": "0.0.2",
   "description": "Another static blog generator",
   "main": "index.js",
