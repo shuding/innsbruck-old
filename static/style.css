@@ -6,6 +6,11 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+html {
+  font-size: 15px;
 }
 
 body {
@@ -13,11 +18,16 @@ body {
   max-width: 1280px;
   font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'PingFang SC', 'PingFang TC', 'PingFang HK', 'Microsoft YaHei', sans-serif;
   font-weight: normal;
-  font-size: 15px;
+  font-size: 100%;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   background: white;
+  word-wrap: break-word;
+  word-break: break-word;
+  -webkit-touch-callout: none !important;
 }
+
+a { -webkit-user-select: none !important; }
 
 a, a:visited, input[type=submit] {
   position: relative;
@@ -25,13 +35,6 @@ a, a:visited, input[type=submit] {
   text-decoration: none;
   font-weight: 600;
   color: #000BAE;
-
-  /* wrapping settings */
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  vertical-align: bottom;
 }
 
 a:after {
@@ -83,6 +86,7 @@ p {
 blockquote {
   margin-bottom: 2em;
   font-style: italic;
+  color: #555;
 }
 
 h2 {
@@ -117,7 +121,7 @@ textarea {
 hr {
   border: none;
   margin: 2em 0;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid #ddd;
 }
 
 nav {
@@ -213,6 +217,10 @@ pre { overflow: scroll; }
   margin: 0 0 20px;
 }
 
+h1.page-title {
+  margin-top: 0;
+}
+
 .title-overflow > h2 {
   overflow: hidden;
   padding-left: 3px;
@@ -228,4 +236,36 @@ pre { overflow: scroll; }
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.post-list {
+  margin-bottom: 3em;
+}
+
+.post-list-description-off:not(:last-of-type) {
+  margin-bottom: 0;
+}
+
+.post-list-description-off h2 {
+  margin-top: 1em;
+}
+
+/* mobile portrait */
+@media screen and (max-width: 420px) {
+  blockquote {
+    margin-left: 1em;
+    margin-right: 1em;
+  }
+  div.title-overflow {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+  }
+  .title-overflow > .pull-right {
+    float: none;
+  }
+  .title-overflow > h2 {
+    flex: 1;
+    margin-top: 0;
+  }
 }

@@ -4,7 +4,9 @@
     <a href="/post/new">+ Post</a>
     <span> &nbsp; </span>
     <a href="/page/new">+ Page</a>
-    <a class="pull-right" href="/settings">Settings</a>
+    <span> &nbsp; </span>
+    <a href="/index.html" target="_blank">• Preview</a>
+    <a class="pull-right" href="/settings">&#x2206; Settings</a>
     <br/><br/>
   <% } %>
 
@@ -17,7 +19,7 @@
   </nav>
 
   <% for (var i = 0; i < posts.length; i++) { %>
-    <article>
+    <div class="post-list post-list-description-<%= blog.description ? 'on' : 'off' %>">
       <div class="title-overflow">
         <span class="date pull-right"><time><%= (new Date(posts[i].time)).toLocaleString() %></time></span>
         <h2>
@@ -28,19 +30,21 @@
           </a>
         </h2>
       </div>
-      <% if (posts[i].content.length <= 100) { %>
-      <p><%= posts[i].content %></p>
-      <% } else { %>
-      <p><%= posts[i].content.substr(0, 80) %> ...</p>
+      <% if (blog.description) { %>
+        <% if (posts[i].content.length <= 100) { %>
+        <p><%= posts[i].content %></p>
+        <% } else { %>
+        <p><%= posts[i].content.substr(0, 80) %> ...</p>
+        <% } %>
       <% } %>
-    </article>
+    </div>
   <% } %>
   <% if (current == 2) { %>
-    <a href="/">< Previous Page</a>
+    <a href="/<%= static ? 'index.html' : '' %>">&#x276E; Previous Page</a>
   <% } else if (current > 1) { %>
-    <a href="/p/<%= current - 1 %>">< Previous Page</a>
+    <a href="/p/<%= current - 1 %><%= static ? '.html' : '' %>">&#x276E; Previous Page</a>
   <% } %>
   <% if (current < total) { %>
-    <a href="/p/<%= current + 1 %>" class="pull-right">Next Page ></a>
+    <a href="/p/<%= current + 1 %><%= static ? '.html' : '' %>" class="pull-right">Next Page &#x276F;</a>
   <% } %>
 </div>

@@ -11,6 +11,7 @@ const ejs = require('ejs');
 
 module.exports.save     = save;
 module.exports.generate = generate;
+module.exports.renderWp = renderWp;
 
 function logStaticFile(file) {
   console.log(`Page ${file} generated successfully.`);
@@ -56,6 +57,14 @@ function generate(template, context) {
   fn       = ejs.compile(tpl, {
     filename: viewPath
   });
-
   return fn(context);
+}
+
+/**
+ * A koa render wrapper
+ */
+function renderWp(template, ...data) {
+  return this.render(template, Object.assign(...data, {
+    static: false
+  }));
 }

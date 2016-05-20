@@ -1,5 +1,5 @@
 <div>
-  <a href="/">< Back</a>
+  <a href="/<%= static ? 'index.html' : '' %>">&#x276E; Back</a>
   <article>
     <h2><%= post.title %></h2>
     <span class="date"><%= blog.name %>, <time><%= (new Date(post.time)).toLocaleString() %></time>
