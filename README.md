@@ -1,5 +1,7 @@
 # innsbruck
 
+![https://img.shields.io/travis/quietshu/innsbruck.svg](https://img.shields.io/travis/quietshu/innsbruck.svg) ![https://img.shields.io/npm/v/innsbruck-blog.svg](https://img.shields.io/npm/v/innsbruck-blog.svg) ![https://img.shields.io/npm/l/innsbruck-blog.svg](https://img.shields.io/npm/l/innsbruck-blog.svg)
+
 A minimal, static, content focused and super light weighted blogging tool. For humans.
 
 ## usage (build by yourself)

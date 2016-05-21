@@ -10,7 +10,6 @@ const fs   = require('fs');
 const low     = require('lowdb');
 const storage = require('lowdb/file-sync');
 const db      = low('db.json', {storage});
-const opener  = require('opener');
 
 // markd
 const marked = require('marked');
@@ -31,6 +30,8 @@ const parse  = require('co-busboy');
 const { save, generate, renderWp } = require('./gen');
 
 var app = koa();
+
+module.exports = app;
 
 render(app, {
   root:    path.join(__dirname, 'view'),
@@ -67,6 +68,7 @@ app.use(function *(next) {
   try {
     yield next;
   } catch (err) {
+    this.status = 500;
     yield renderWp.call(this, 'error', blog.info(), {
       error: err
     });
@@ -271,9 +273,3 @@ function savePage(link) {
 if (typeof db.object.blog === 'undefined') {
   db.object.blog = JSON.parse(fs.readFileSync(path.join(__dirname, 'blog.default.json')));
 }
-
-// bind port
-app.listen(3000, err => {
-  console.log('Innsbruck running on port 3000');
-  opener('http://localhost:3000');
-});

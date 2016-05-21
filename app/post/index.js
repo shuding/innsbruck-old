@@ -103,5 +103,5 @@ function postRemove(link) {
 
 function postPageCnt() {
   let pagination = db('blog').value().pagination;
-  return Math.ceil(db('posts').size() / pagination);
+  return Math.ceil(db('posts').size() / pagination) || 1;
 }

@@ -1,11 +1,9 @@
 {
-  "blog": {
-    "name": "innsbruck",
-    "footer": "Copyright 2016. Powered by Innsbruck.",
-    "description": true,
-    "pagination": 10,
-    "google-analytics": "",
-    "disqus": "",
-    "css": ""
-  }
+  "name": "innsbruck",
+  "footer": "Copyright 2016. Powered by Innsbruck.",
+  "description": true,
+  "pagination": 10,
+  "google-analytics": "",
+  "disqus": "",
+  "css": ""
 }

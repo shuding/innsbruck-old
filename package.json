@@ -1,10 +1,11 @@
 {
   "name": "innsbruck-blog",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Another static blog generator",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -28,5 +29,10 @@
     "lowdb": "^0.12.5",
     "marked": "^0.3.5",
     "opener": "^1.4.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "*",
+    "supertest": "^1.2.0"
   }
 }

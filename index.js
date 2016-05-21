@@ -4,4 +4,11 @@
  */
 
 // entry point here
-require('./app');
+const opener = require('opener');
+const app    = require('./app');
+
+// bind port
+app.listen(3000, err => {
+  console.log('Innsbruck running on port 3000');
+  opener('http://localhost:3000');
+});
