@@ -27,6 +27,8 @@ TODO.
 
 http://quietshu.github.io/
 
+[![screen shot](./screenshot.png)](http://quietshu.github.io/)
+
 ## other
 
 - Accessibility

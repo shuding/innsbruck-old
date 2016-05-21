@@ -1,8 +1,10 @@
-<div>
-  <a href="/<%= static ? 'index.html' : '' %>">&#x276E; Back</a>
+<div class="post-view">
+  <% if (!static) { %>
+    <a href="/">&#x276E; Back</a>
+  <% } %>
   <article>
-    <h2><%= post.title %></h2>
-    <span class="date"><%= blog.name %>, <time><%= (new Date(post.time)).toLocaleString() %></time>
+    <h1><%= post.title %></h1>
+    <span class="date"><a href="/<%= static ? 'index.html' : '' %>"><%= blog.name %></a>, <time><%= (new Date(post.time)).toLocaleString() %></time>
       <% if (!static) { %>
         | <a href="/post/<%= post.link %>/edit">edit</a>
         | <a href="javascript:;"

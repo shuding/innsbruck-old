@@ -10,7 +10,7 @@
 }
 
 html {
-  font-size: 15px;
+  font-size: 16px;
 }
 
 body {
@@ -22,6 +22,11 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   background: white;
+
+  font-feature-settings: "liga";
+  -webkit-font-feature-settings: "liga";
+  -moz-font-feature-settings: "liga";
+
   word-wrap: break-word;
   word-break: break-word;
   -webkit-touch-callout: none !important;
@@ -87,10 +92,6 @@ blockquote {
   margin-bottom: 2em;
   font-style: italic;
   color: #555;
-}
-
-h2 {
-  margin-bottom: 10px;
 }
 
 article {
@@ -163,13 +164,15 @@ footer {
   color: #ccc;
 }
 
+article img { max-width: 100%; }
+
 li { line-height: 1.4em; margin-bottom: 0.5em; }
 li > p { margin: 0; }
 ul { margin: 0; }
 dt { font-weight: bold; }
 dd { margin-bottom: 0.5em; }
 
-h1 { font-size: 200%; }
+h1 { font-size: 180%; }
 h2 { font-size: 160%; }
 h3 { font-size: 120%; }
 h4 { font-size: 100%; }
@@ -178,6 +181,10 @@ h6 { font-size: 80%; font-weight: normal; }
 h1, h2, h3, h4, h5, h6 { margin-top: 1.4em; }
 
 pre { overflow: scroll; }
+
+.post-view h1, .page-view h1 {
+  margin-bottom: 50px;
+}
 
 .container {
   margin: auto;
@@ -217,10 +224,6 @@ pre { overflow: scroll; }
   margin: 0 0 20px;
 }
 
-h1.page-title {
-  margin-top: 0;
-}
-
 .title-overflow > h2 {
   overflow: hidden;
   padding-left: 3px;
@@ -239,11 +242,16 @@ h1.page-title {
 }
 
 .post-list {
-  margin-bottom: 3em;
+  margin-bottom: 2em;
+  font-size: 90%;
+}
+
+.post-list > p {
+  margin-top: 5px;
 }
 
 .post-list-description-off:not(:last-of-type) {
-  margin-bottom: 0;
+  margin-bottom: 1em;
 }
 
 .post-list-description-off h2 {

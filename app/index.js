@@ -23,6 +23,7 @@ const route  = require('koa-route');
 const render = require('koa-ejs');
 const body   = require('koa-body');
 const send   = require('koa-send');
+const parse  = require('co-busboy');
 
 // generate static site
 //import { save, generate } from './gen';
@@ -41,9 +42,12 @@ render(app, {
 app.use(body());
 
 // static files
-app.use(route.get('/static/:file', function *(file) {
-  yield send(this, path.join('static', file));
-}));
+app.use(function *(next) {
+  if (this.method != 'GET' || !this.path.match(/^\/static\//g)) {
+    return yield next;
+  }
+  yield send(this, this.path);
+});
 
 // preview
 app.use(function *(next) {
@@ -181,6 +185,20 @@ app.use(route.post('/page/:link/edit', function *(link) {
 
   saveIndex();
   savePage(newLink);
+}));
+
+/**
+ * Upload an image
+ */
+app.use(route.post('/upload', function *() {
+  let parts = parse(this);
+  let part;
+  while (part = yield parts) {
+    var stream = fs.createWriteStream(path.join(__dirname, '..', 'static', part.filename));
+    part.pipe(stream);
+  }
+
+  this.body = 'OK';
 }));
 
 /**
