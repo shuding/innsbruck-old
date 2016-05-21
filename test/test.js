@@ -56,7 +56,7 @@ describe('innsbruck', () => {
     it('should have created a new html file', () => {
       let filePath = path.join(__dirname, '..', 'post', '1.html');
       assert(fs.existsSync(filePath));
-      assert(fs.readFileSync(filePath).includes(CONTENT));
+      assert(fs.readFileSync(filePath).toString().includes(CONTENT));
     });
     it('should display post on website', done => {
       request

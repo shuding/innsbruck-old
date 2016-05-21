@@ -1,10 +1,10 @@
 {
   "name": "innsbruck-blog",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Another static blog generator",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node --harmony_sloppy_let --harmony_destructuring --harmony index.js",
     "test": "mocha"
   },
   "repository": {
