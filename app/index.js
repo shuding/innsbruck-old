@@ -69,7 +69,7 @@ app.use(function *(next) {
   try {
     yield next;
   } catch (err) {
-    console.error(err);
+    console.error('Error!', err.message);
     this.status = 500;
     yield renderDynamic.call(this, 'error', blog.info(), {
       error: err

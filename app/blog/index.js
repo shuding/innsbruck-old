@@ -26,7 +26,6 @@ module.exports.set = function (data) {
   let description     = typeof data.description !== 'undefined';
   let footer          = data.footer;
   let googleAnalytics = data['google-analytics'];
-  let disqus          = data.disqus;
   let css             = data.css;
 
   if (!pagination || !pagination.length) {
@@ -41,7 +40,6 @@ module.exports.set = function (data) {
                         pagination,
                         description,
     'google-analytics': googleAnalytics || '',
-    disqus:             disqus || '',
     css:                css || '',
     plugin:             Object.assign(db.object.blog.plugin || {}, data.plugin || {})
   };

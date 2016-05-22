@@ -14,5 +14,7 @@
     <p><%- marked(post.content) %></p>
   </article>
 
+  <%- plugin.enable ? plugin.postBottom || '' : '' %>
+
   <form id="delete_form" style="display: none" method="POST" action="/post/<%= post.link %>/delete"></form>
 </div>

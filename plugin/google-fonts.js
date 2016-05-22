@@ -9,7 +9,7 @@ module.exports = {
     this.db = _db;
   },
   render: (template, options) => {
-    let font = options.blog.plugin ? options.blog.plugin['google-fonts'] : '';
+    let font = options.blog.plugin ? options.blog.plugin['google-fonts'] || '' : '';
     let context = {};
 
     if (template == 'settings') {
