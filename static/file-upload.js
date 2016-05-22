@@ -26,7 +26,8 @@
 
   var finish = function (filename) {
     var editor = document.querySelector('textarea[name=content]');
-    editor.value += ' ![' + filename + '](/static/' + filename + ')';
+    editor.value += '![' + filename + '](/static/' + filename + ')';
+    window.onFileUploaded && window.onFileUploaded('![' + filename + '](/static/' + filename + ')');
   };
 
   var init = function (el) {

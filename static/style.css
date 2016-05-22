@@ -32,28 +32,14 @@ body {
   -webkit-touch-callout: none !important;
 }
 
-a { -webkit-user-select: none !important; }
-
 a, a:visited, input[type=submit] {
-  position: relative;
-  display: inline-block;
   text-decoration: none;
   font-weight: 600;
   color: #000BAE;
 }
 
-a:after {
-  content: '';
-  display: block;
-  height: 0.5em;
-  margin-top: -0.5em;
-  margin-left: -3px;
-  margin-right: -3px;
-  mix-blend-mode: multiply;
-}
-
-a:hover:after {
-  background: #FF3E2D;
+a:hover {
+  border-bottom: 1px solid;
 }
 
 a:focus {
@@ -137,6 +123,7 @@ nav {
 }
 
 nav > a {
+  position: relative;
   line-height: 64px;
   min-width: 64px;
   margin-left: 20px;
@@ -146,7 +133,12 @@ nav > a {
   text-overflow: ellipsis;
 }
 
-nav > a:after {
+nav > a:hover {
+  border: none;
+}
+
+nav > a:hover:before, nav > a:hover:after {
+  content: "";
   position: absolute;
   top: 0;
   bottom: 0;
@@ -154,8 +146,14 @@ nav > a:after {
   right: 0;
   width: 64px;
   margin: auto;
-  transform: rotate(45deg);
+  height: 1px;
+  border-bottom: 1px solid;
+  transform: rotate(-45deg);
   mix-blend-mode: multiply;
+}
+
+nav > a:hover:after {
+  transform: rotate(45deg);
 }
 
 footer {
@@ -225,17 +223,12 @@ pre { overflow: scroll; }
 }
 
 .title-overflow > h2 {
-  overflow: hidden;
-  padding-left: 3px;
   padding-right: 15px;
-  margin-left: -3px;
   margin-bottom: 0;
 }
 
 .title-overflow > h2 > a {
   max-width: 100%;
-  padding: 0 3px;
-  margin: 0 -3px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

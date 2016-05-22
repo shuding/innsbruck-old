@@ -12,7 +12,12 @@
       <p style="display: flex; display: -webkit-flex">
         <span style="padding: 5px 5px 5px 0; color: #ccc">Menu display order: </span><input class="inline-input" style="flex: 1; -webkit-flex: 1" type="text" name="order" placeholder="...-2, -1, 0, 1, 2..." value="<%= page.order %>" autocomplete="off">
       </p>
+      <p>Insert image (uploaded to "/static" folder): <input class="file-upload" style="display: none" type="file">
+      <noscript>sorry, but your browser doesn't support JavaScript.</noscript>
+      </p>
     </article>
     <input type="submit" value="Save">
   </form>
 </div>
+<script src="/static/file-upload.js"></script>
+<%- plugin.enable ? plugin.editorBottom : '' %>
