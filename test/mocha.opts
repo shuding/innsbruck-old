@@ -1,5 +1,3 @@
 --reporter spec
 --ui bdd
---harmony_sloppy_let
---harmony_destructuring
 --harmony
