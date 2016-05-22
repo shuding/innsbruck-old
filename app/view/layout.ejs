@@ -13,11 +13,16 @@
 
   <!-- custom styles -->
   <style><%- blog ? blog.css : '' %></style>
+
+  <%- plugin.enable ? plugin.head || '' : '' %>
 </head>
 <body>
+  <%- plugin.enable ? plugin.bodyTop || '' : '' %>
+
   <div class="container">
     <%- body %>
     <footer><%= blog ? blog.footer : '' %></footer>
+    <%- plugin.enable ? plugin.containerBottom || '' : '' %>
   </div>
   <% if (blog['google-analytics']) { %>
   <script>
@@ -31,5 +36,7 @@
 
   </script>
   <% } %>
+
+  <%- plugin.enable ? plugin.bodyBottom || '' : '' %>
 </body>
 </html>

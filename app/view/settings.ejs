@@ -2,6 +2,7 @@
   <a href="/">&#x276E; Back</a>
   <form id="settings_form" method="POST" action="/settings">
     <article>
+      <h3>Basic</h3>
       <div class="input-group">
         <h5>Blog Name</h5>
         <p><input type="text" name="name" placeholder="" value="<%= blog.name %>" autocomplete="off"></p>
@@ -19,6 +20,7 @@
         <p><input type="checkbox" name="description" <%- blog.description ? 'checked aria-checked' : '' %>></p>
       </div>
       <hr/>
+      <h3>Advanced</h3>
       <div class="input-group">
         <h5>Google Analytics</h5>
         <p><input type="text" name="google-analytics" placeholder="ID" value="<%= blog['google-analytics'] %>"></p>
@@ -27,11 +29,15 @@
         <h5>Disqus</h5>
         <p><input type="text" name="disqus" placeholder="Disqus" value="<%= blog.disqus %>" disabled aria-disabled="true"></p>
       </div>
-      <hr/>
       <div class="input-group">
         <h5>Custom CSS</h5>
         <p><input type="text" name="css" placeholder="..." value="<%= blog.css %>"></p>
       </div>
+      <% if (plugin.enable) { %>
+        <hr/>
+        <h3>Plugins</h3>
+        <%- plugin.settings || '' %>
+      <% } %>
       <br/>
       <input type="submit" value="Save">
     </article>

@@ -42,7 +42,8 @@ module.exports.set = function (data) {
                         description,
     'google-analytics': googleAnalytics || '',
     disqus:             disqus || '',
-    css:                css || ''
+    css:                css || '',
+    plugin:             Object.assign(db.object.blog.plugin || {}, data.plugin || {})
   };
 };
 

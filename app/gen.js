@@ -9,9 +9,7 @@ const basedir = path.join(__dirname, '..');
 
 const ejs = require('ejs');
 
-module.exports.save     = save;
-module.exports.generate = generate;
-module.exports.renderWp = renderWp;
+module.exports = { save, generateWp, renderWp };
 
 function logStaticFile(file) {
   console.log(`Page ${file} generated successfully.`);
@@ -43,28 +41,53 @@ function save(file, content) {
   }
 }
 
-function generate(template, context) {
-  let viewPath = path.join(__dirname, 'view', template + '.html');
-  let tpl      = fs.readFileSync(viewPath, 'utf8');
-  let fn       = ejs.compile(tpl, {
-    filename: viewPath
-  });
+function generateWp(plugin) {
 
-  context.body = fn(context);
+  return function (template, context) {
+    let viewPath = path.join(__dirname, 'view', template + '.ejs');
+    let tpl      = fs.readFileSync(viewPath, 'utf8');
+    let fn       = ejs.compile(tpl, {
+      filename: viewPath
+    });
 
-  viewPath = path.join(__dirname, 'view', 'layout.html');
-  tpl      = fs.readFileSync(viewPath, 'utf8');
-  fn       = ejs.compile(tpl, {
-    filename: viewPath
-  });
-  return fn(context);
+    context = plugin(template, Object.assign({
+      // defaults
+      plugin: {
+        enable: false
+      }
+    }, context, {
+      // rewrites
+      static: true
+    }));
+
+    context.body = fn(context);
+
+    viewPath = path.join(__dirname, 'view', 'layout.ejs');
+    tpl      = fs.readFileSync(viewPath, 'utf8');
+    fn       = ejs.compile(tpl, {
+      filename: viewPath
+    });
+    return fn(context);
+  };
+
 }
 
 /**
  * A koa render wrapper
  */
-function renderWp(template, ...data) {
-  return this.render(template, Object.assign(...data, {
-    static: false
-  }));
+function renderWp(plugin) {
+
+  return function (template, ...data) {
+    let context = Object.assign({
+      // defaults
+      plugin: {
+        enable: false
+      }
+    }, ...data, {
+      // rewrites
+      static: false
+    });
+    return this.render(template, plugin(template, context));
+  };
+
 }

@@ -24,10 +24,11 @@ const body   = require('koa-body');
 const send   = require('koa-send');
 const parse  = require('co-busboy');
 
-// generate static site
-//import { save, generate } from './gen';
-// ^not supported yet :(
-const { save, generate, renderWp } = require('./gen');
+const plugin = require('./plugin')(db);
+const { save, generateWp, renderWp } = require('./gen');
+
+const renderDynamic = renderWp(plugin);
+const renderStatic  = generateWp(plugin);
 
 var app = koa();
 
@@ -36,7 +37,7 @@ module.exports = app;
 render(app, {
   root:    path.join(__dirname, 'view'),
   layout:  'layout',
-  viewExt: 'html',
+  viewExt: 'ejs',
   cache:   false
 });
 
@@ -68,51 +69,52 @@ app.use(function *(next) {
   try {
     yield next;
   } catch (err) {
+    console.error(err);
     this.status = 500;
-    yield renderWp.call(this, 'error', blog.info(), {
+    yield renderDynamic.call(this, 'error', blog.info(), {
       error: err
     });
   }
 });
 
 app.use(route.get('/', function *() {
-  yield renderWp.call(this, 'posts', post.list(1), page.all(), blog.info());
+  yield renderDynamic.call(this, 'posts', post.list(1), page.all(), blog.info());
 }));
 
 app.use(route.get('/p/:cnt', function *(cnt) {
   if (cnt == '1') {
     return this.redirect('/');
   }
-  yield renderWp.call(this, 'posts', post.list(cnt), page.all(), blog.info());
+  yield renderDynamic.call(this, 'posts', post.list(cnt), page.all(), blog.info());
 }));
 
 app.use(route.get('/settings', function *() {
-  yield renderWp.call(this, 'settings', blog.info());
+  yield renderDynamic.call(this, 'settings', blog.info());
 }));
 
 app.use(route.get('/post/new', function *() {
-  yield renderWp.call(this, 'post-new', blog.info());
+  yield renderDynamic.call(this, 'post-new', blog.info());
 }));
 
 app.use(route.get('/post/:link', function *(link) {
-  yield renderWp.call(this, 'post', post.show(link), blog.info(), {marked});
+  yield renderDynamic.call(this, 'post', post.show(link), blog.info(), {marked});
 }));
 
 app.use(route.get('/post/:link/edit', function *(link) {
-  yield renderWp.call(this, 'post-edit', post.show(link), blog.info());
+  yield renderDynamic.call(this, 'post-edit', post.show(link), blog.info());
 }));
 
 app.use(route.get('/page/new', function *() {
-  yield renderWp.call(this, 'page-new', blog.info());
+  yield renderDynamic.call(this, 'page-new', blog.info());
 }));
 
 app.use(route.get('/page/:link/edit', function *(link) {
-  yield renderWp.call(this, 'page-edit', blog.info(), page.show(link), {marked});
+  yield renderDynamic.call(this, 'page-edit', blog.info(), page.show(link), {marked});
 }));
 
 app.use(route.get('/:link', function *(link) {
   if (db('pages').find({link})) {
-    yield renderWp.call(this, 'page', blog.info(), page.show(link), {marked});
+    yield renderDynamic.call(this, 'page', blog.info(), page.show(link), {marked});
   }
 }));
 
@@ -228,22 +230,17 @@ function saveIndex() {
   let p = page.all();
   let t = postPageCnt();
 
-  save('index', generate.apply(this, ['posts', Object.assign(post.list(1), p, b, {
-    static: true
-  })]));
+  save('index', renderStatic.call(this, 'posts', Object.assign(post.list(1), p, b)));
 
   for (let i = 2; i <= t; ++i) {
-    save('p/' + i, generate.apply(this, ['posts', Object.assign(post.list(i), p, b, {
-      static: true
-    })]));
+    save('p/' + i, renderStatic.call(this, 'posts', Object.assign(post.list(i), p, b)));
   }
 }
 
 function savePost(link) {
   // write post/:id.html
   link = String(link);
-  save('post/' + link, generate('post', Object.assign(post.show(link), blog.info(), {
-    static: true,
+  save('post/' + link, renderStatic('post', Object.assign(post.show(link), blog.info(), {
     marked
   })));
 }
@@ -253,19 +250,17 @@ function saveAllPosts() {
 
   let b = blog.info();
   for (let p of posts) {
-    save('post/' + p.link, generate('post', Object.assign(b, {
-      static: true,
+    save('post/' + p.link, renderStatic('post', Object.assign(b, {
       post:   p,
-      marked
+              marked
     })));
   }
 }
 
 function savePage(link) {
   // write :link.html
-  save('page/' + link, generate('page', Object.assign(blog.info(), page.show(link), {
-    static: true,
-            marked
+  save('page/' + link, renderStatic('page', Object.assign(blog.info(), page.show(link), {
+    marked
   })));
 }
 

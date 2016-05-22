@@ -5,5 +5,8 @@
   "pagination": 10,
   "google-analytics": "",
   "disqus": "",
-  "css": ""
+  "css": "",
+  "plugin": {
+
+  }
 }
