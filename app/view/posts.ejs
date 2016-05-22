@@ -29,6 +29,7 @@
             <%= posts[i].title %>
           </a>
         </h2>
+        <%- plugin.enable && plugin.postLiTitleBottom ? plugin.postLiTitleBottom(posts[i]) : '' %>
       </div>
       <% if (blog.description) { %>
         <% if (posts[i].content.length <= 100) { %>

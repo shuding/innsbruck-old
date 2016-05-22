@@ -20,8 +20,8 @@
 
     // resets
     el.value = '';
-    el.type = 'text';
-    el.type = 'file';
+    el.type  = 'text';
+    el.type  = 'file';
   };
 
   var finish = function (filename) {
@@ -41,7 +41,9 @@
       request.open('POST', '/upload');
       request.send(formData);
       request.onload = function () {
-        finish(el.files[0].name);
+        if (el.className.indexOf('upload-finish') != -1) {
+          finish(el.files[0].name);
+        }
         uploads.forEach(resume);
       };
     });

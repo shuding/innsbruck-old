@@ -222,9 +222,20 @@ pre { overflow: scroll; }
   margin: 0 0 20px;
 }
 
+.title-overflow {
+  color: #000BAE;
+}
+
 .title-overflow > h2 {
   padding-right: 15px;
+  padding-bottom: 3px;
   margin-bottom: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.title-overflow > .pull-right {
+  line-height: 160%;
 }
 
 .title-overflow > h2 > a {
@@ -261,6 +272,7 @@ pre { overflow: scroll; }
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
+    flex-wrap: wrap;
   }
   .title-overflow > .pull-right {
     float: none;

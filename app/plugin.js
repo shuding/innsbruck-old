@@ -11,35 +11,47 @@ const path = require('path');
 module.exports = function (db) {
   // include all plugins
   const pluginDir = path.join(__dirname, '..', 'plugin');
-  const plugins = fs.readdirSync(pluginDir).filter(filename => {
-    "use strict";
-    return filename.endsWith('.js');
-  }).map(filename => {
-    return require(path.join('..', 'plugin', filename));
-  });
+  const plugins   = fs
+    .readdirSync(pluginDir)
+    .filter(filename => filename.endsWith('.js'))
+    .map(filename => require(path.join('..', 'plugin', filename)));
 
   // init all plugins
-  plugins.forEach(plugin => {
-    plugin.init && plugin.init(db);
-  });
+  plugins.forEach(plugin => (plugin.init && plugin.init(db)));
 
   return function (template, options) {
     "use strict";
 
     let pluginContext = {};
+    let plugin = {};
     plugins.forEach(plugin => {
       let context = plugin.render(template, options);
-      for (let k in context)
+      for (let k in context) {
         if (context.hasOwnProperty(k)) {
-          pluginContext[k] = (pluginContext[k] || '') + context[k];
+          if (pluginContext[k])
+            pluginContext[k].push(context[k]);
+          else
+            pluginContext[k] = [context[k]];
         }
+      }
     });
 
-    pluginContext.enable = true;
+    for (let k in pluginContext)
+      if (pluginContext.hasOwnProperty(k)){
+        plugin[k] = function (...args) {
+          let ret = '';
+          for (let v of pluginContext[k])
+            if (typeof v === 'string')
+              ret += v;
+            else
+              ret += v(...args);
+          return ret;
+        };
+      }
 
-    return Object.assign(options, {
-      plugin: pluginContext
-    });
+    plugin.enable = true;
+
+    return Object.assign(options, {plugin});
   }
 
 };

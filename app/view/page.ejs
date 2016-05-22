@@ -11,7 +11,7 @@
   </article>
   <a href="/<%= static ? 'index.html' : '' %>">&#x276E; <%= blog.name %></a>
 
-  <%- plugin.enable ? plugin.pageBottom || '' : '' %>
+  <%- plugin.enable && plugin.pageBottom ? plugin.pageBottom() : '' %>
 
   <form id="delete_form" style="display: none" method="POST" action="/page/<%= page.link %>/delete"></form>
 </div>

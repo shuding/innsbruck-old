@@ -32,7 +32,7 @@
       <% if (plugin.enable) { %>
         <hr/>
         <h3>Plugins</h3>
-        <%- plugin.settings || '' %>
+        <%- plugin.settings ? plugin.settings() : '' %>
       <% } %>
       <br/>
       <input type="submit" value="Save">

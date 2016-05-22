@@ -251,8 +251,8 @@ function saveAllPosts() {
   let b = blog.info();
   for (let p of posts) {
     save('post/' + p.link, renderStatic('post', Object.assign(b, {
-      post:   p,
-              marked
+      post: p,
+            marked
     })));
   }
 }

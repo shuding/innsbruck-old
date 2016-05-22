@@ -54,10 +54,11 @@ module.exports.new = function (data, _id) {
 
   db.object.id = id;
   db('posts').push({
-          title,
-          content,
-    link: '' + id,
-    time: (new Date()).getTime()
+            title,
+            content,
+    link:   '' + id,
+    time:   (new Date()).getTime(),
+    plugin: data.plugin || {}
   });
 
   return id;
