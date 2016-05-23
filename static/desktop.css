@@ -1,0 +1,80 @@
+body {
+  margin: 0;
+  padding: 40px;
+  min-height: 100vh;
+  overflow: scroll;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+a, a:visited {
+  color: #ccc;
+  text-decoration: none;
+}
+
+button a {
+  color: initial;
+  text-decoration: none;
+}
+
+button {
+  color: #5A5A5A;
+}
+
+article h2, h1.blog-name {
+  margin-top: 0;
+}
+
+iframe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
+img {
+  max-width: 100%;
+}
+
+.margin-top {
+  margin-top: 50px;
+}
+
+.margin-bottom {
+  margin-bottom: 20px;
+}
+
+.btn-primary .icon,
+.btn-positive .icon,
+.btn-negative .icon,
+.btn-warning .icon {
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-header {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 0;
+  z-index: 999;
+  -webkit-app-region: drag;
+}
+
+.toolbar-footer {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  z-index: 999;
+}
+
+.wrap {
+  white-space: normal;
+}
+
+.pane-group {
+  top: 55px;
+  bottom: 22px;
+}

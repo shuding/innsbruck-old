@@ -1,0 +1,28 @@
+
+<div class="post-view margin-bottom">
+  <article>
+
+    <h2 class="wrap"><%= post.title %></h2>
+    <span class="date">
+      <time><%= (new Date(post.time)).toLocaleString() %></time>
+    </span>
+    <p><%- marked(post.content) %></p>
+  </article>
+
+  <%- plugin.enable && plugin.postBottom ? plugin.postBottom() : '' %>
+
+  <form id="delete_form" style="display: none" method="POST" action="/post/<%= post.link %>/delete"></form>
+</div>
+
+<footer class="toolbar toolbar-footer">
+  <div class="toolbar-actions">
+    <button class="btn btn-default" onclick='window.top.postMessage("confirm(\"Delete <%= post.title %>?\")", "*"); window.onmessage = function (e) { if (e.data == "true") delete_form.submit() };'>
+      <span class="icon icon-trash"></span>
+    </button>
+
+    <button class="btn btn-default btn-link pull-right" data-link="/post/<%= post.link %>/edit">
+      <span class="icon icon-pencil icon-text"></span>
+      Edit
+    </button>
+  </div>
+</footer>

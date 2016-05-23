@@ -6,7 +6,7 @@
 
 // entry point here
 const opener = require('opener');
-const app    = require('./app');
+const app    = require('./app')();
 
 var PORT   = 3000;
 var SILENT = false;

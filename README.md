@@ -23,6 +23,12 @@ Terminal arguments:
 - Custom port number: `$ node index.js --port=2000`
 - Do not start up in the browser automatically: `$ node index.js -s`
 
+### build with electron (not ready!)
+
+1. Install the latest version of __electron-prebuilt__, which supports ES6: `$ electron -v` >= 1.1.1.
+2. `npm run prebuild-desktop`
+3. `npm run electron`
+
 ## usage (binary application)
 
 TODO.

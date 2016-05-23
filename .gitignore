@@ -1,15 +1,14 @@
 .idea
+.cache
+.DS_Store
 node_modules
 npm-debug.log
 
 db.json
-
-.DS_Store
+db.backup.json
 
 /index.html
-
 /post
-
 /p
 
-db.backup.json
+/static/photon

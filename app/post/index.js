@@ -15,6 +15,15 @@ module.exports.init = _db => {
 };
 
 /**
+ * Returns all post
+ */
+module.exports.all = function () {
+  return {
+    posts: db('posts').orderBy('link', 'desc')
+  };
+};
+
+/**
  * Returns all post data in page `p`
  */
 module.exports.list = function (p) {

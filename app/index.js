@@ -30,241 +30,297 @@ const { save, generateWp, renderWp } = require('./gen');
 const renderDynamic = renderWp(plugin);
 const renderStatic  = generateWp(plugin);
 
-var app = koa();
+module.exports = function (_env) {
+  "use strict";
+  var env = {
+    electron: false
+  };
 
-module.exports = app;
+  if (_env) {
+    for (let k in _env) {
+      if (_env.hasOwnProperty(k)) {
+        env[k] = _env[k];
+      }
+    }
+  }
 
-render(app, {
-  root:    path.join(__dirname, 'view'),
-  layout:  'layout',
-  viewExt: 'ejs',
-  cache:   false
-});
+  var app = koa();
 
-app.use(body());
+  let viewPath = env.electron ? path.join(__dirname, '..', 'desktop', 'view') : path.join(__dirname, 'view');
+
+  render(app, {
+    root:    viewPath,
+    layout:  'layout',
+    viewExt: 'ejs',
+    cache:   false
+  });
+
+  app.use(body());
 
 // static files
-app.use(function *(next) {
-  if (this.method != 'GET' || !this.path.match(/^\/static\//g)) {
-    return yield next;
-  }
-  yield send(this, this.path);
-});
+  app.use(function *(next) {
+    if (this.method != 'GET' || !this.path.match(/^\/static\//g)) {
+      return yield next;
+    }
+    yield send(this, this.path);
+  });
 
 // preview
-app.use(function *(next) {
-  if (this.method != 'GET' || !this.path.match(/\.html$/g)) {
-    return yield next;
-  }
-  yield send(this, this.path);
-});
+  app.use(function *(next) {
+    if (this.method != 'GET' || !this.path.match(/\.html$/g)) {
+      return yield next;
+    }
+    yield send(this, this.path);
+  });
 
 // routes
-var blog = require('./blog').init(db);
-var post = require('./post').init(db);
-var page = require('./page').init(db);
+  var blog = require('./blog').init(db);
+  var post = require('./post').init(db);
+  var page = require('./page').init(db);
 
 // error handling
-app.use(function *(next) {
-  try {
-    yield next;
-  } catch (err) {
-    console.error('Error!', err.message);
-    this.status = 500;
-    yield renderDynamic.call(this, 'error', blog.info(), {
-      error: err
+  app.use(function *(next) {
+    try {
+      yield next;
+    } catch (error) {
+      console.error('Error!', error.message);
+      this.status = 500;
+      yield renderDynamic.call(this, 'error', blog.info(), {
+        error,
+        env
+      });
+    }
+  });
+
+  app.use(route.get('/', function *() {
+    if (env.electron) {
+      yield renderDynamic.call(this, 'posts', post.all(), page.all(), blog.info(), {env});
+    }
+    else {
+      yield renderDynamic.call(this, 'posts', post.list(1), page.all(), blog.info(), {env});
+    }
+  }));
+
+  app.use(route.get('/p/:cnt', function *(cnt) {
+    if (cnt == '1') {
+      return this.redirect('/');
+    }
+    yield renderDynamic.call(this, 'posts', post.list(cnt), page.all(), blog.info(), {env});
+  }));
+
+  app.use(route.get('/settings', function *() {
+    yield renderDynamic.call(this, 'settings', blog.info(), {env});
+  }));
+
+  app.use(route.get('/post/new', function *() {
+    yield renderDynamic.call(this, 'post-new', blog.info(), {env});
+  }));
+
+  app.use(route.get('/post/:link', function *(link) {
+    yield renderDynamic.call(this, 'post', post.show(link), blog.info(), {
+      marked,
+      env
     });
-  }
-});
+  }));
 
-app.use(route.get('/', function *() {
-  yield renderDynamic.call(this, 'posts', post.list(1), page.all(), blog.info());
-}));
+  app.use(route.get('/post/:link/edit', function *(link) {
+    yield renderDynamic.call(this, 'post-edit', post.show(link), blog.info(), {env});
+  }));
 
-app.use(route.get('/p/:cnt', function *(cnt) {
-  if (cnt == '1') {
-    return this.redirect('/');
-  }
-  yield renderDynamic.call(this, 'posts', post.list(cnt), page.all(), blog.info());
-}));
+  app.use(route.get('/page/new', function *() {
+    yield renderDynamic.call(this, 'page-new', blog.info(), {env});
+  }));
 
-app.use(route.get('/settings', function *() {
-  yield renderDynamic.call(this, 'settings', blog.info());
-}));
+  app.use(route.get('/page/:link/edit', function *(link) {
+    yield renderDynamic.call(this, 'page-edit', blog.info(), page.show(link), {
+      marked,
+      env
+    });
+  }));
 
-app.use(route.get('/post/new', function *() {
-  yield renderDynamic.call(this, 'post-new', blog.info());
-}));
+  app.use(route.get('/refresh-main', function *(next) {
+    if (env.electron) {
+      yield renderDynamic.call(this, 'refresh-main', blog.info(), {
+        env
+      });
+    } else yield next;
+  }));
 
-app.use(route.get('/post/:link', function *(link) {
-  yield renderDynamic.call(this, 'post', post.show(link), blog.info(), {marked});
-}));
+  app.use(route.get('/:link', function *(link) {
+    if (db('pages').find({link})) {
+      yield renderDynamic.call(this, 'page', blog.info(), page.show(link), {
+        marked,
+        env
+      });
+    }
+  }));
 
-app.use(route.get('/post/:link/edit', function *(link) {
-  yield renderDynamic.call(this, 'post-edit', post.show(link), blog.info());
-}));
+  /**
+   * Create a post
+   */
+  app.use(route.post('/post/new', function *() {
+    let link = post.new(this.request.body);
+    if (env.electron) {
+      this.redirect('/');
+    } else {
+      this.redirect('/post/' + link);
+    }
 
-app.use(route.get('/page/new', function *() {
-  yield renderDynamic.call(this, 'page-new', blog.info());
-}));
+    saveIndex();
+    savePost(link);
+  }));
 
-app.use(route.get('/page/:link/edit', function *(link) {
-  yield renderDynamic.call(this, 'page-edit', blog.info(), page.show(link), {marked});
-}));
+  /**
+   * Delete a post
+   */
+  app.use(route.post('/post/:link/delete', function *(link) {
+    db('posts').remove({link});
+    post.remove(link);
+    if (env.electron) {
+      this.redirect('/refresh-main');
+    } else {
+      this.redirect('/');
+    }
 
-app.use(route.get('/:link', function *(link) {
-  if (db('pages').find({link})) {
-    yield renderDynamic.call(this, 'page', blog.info(), page.show(link), {marked});
-  }
-}));
+    saveIndex();
+  }));
 
-/**
- * Create a post
- */
-app.use(route.post('/post/new', function *() {
-  let link = post.new(this.request.body);
-  this.redirect('/post/' + link);
+  /**
+   * Edit a post
+   */
+  app.use(route.post('/post/:link/edit', function *(link) {
+    post.test(this.request.body);
+    post.remove(link);
+    post.new(this.request.body, link);
 
-  saveIndex();
-  savePost(link);
-}));
+    this.redirect('/post/' + link);
 
-/**
- * Delete a post
- */
-app.use(route.post('/post/:link/delete', function *(link) {
-  db('posts').remove({link});
-  post.remove(link);
-  this.redirect('/');
+    // write index.html
+    saveIndex();
+    savePost(link);
+  }));
 
-  saveIndex();
-}));
+  /**
+   * Create a page
+   */
+  app.use(route.post('/page/new', function *() {
+    let link = page.new(this.request.body);
 
-/**
- * Edit a post
- */
-app.use(route.post('/post/:link/edit', function *(link) {
-  post.test(this.request.body);
-  post.remove(link);
-  post.new(this.request.body, link);
+    if (env.electron) {
+      this.redirect('/');
+    } else {
+      this.redirect('/' + link);
+    }
 
-  this.redirect('/post/' + link);
+    saveIndex();
+    savePage(link);
+  }));
 
-  // write index.html
-  saveIndex();
-  savePost(link);
-}));
+  /**
+   * Delete a page
+   */
+  app.use(route.post('/page/:link/delete', function *(link) {
+    page.remove(link);
+    if (env.electron) {
+      this.redirect('/refresh-main');
+    } else {
+      this.redirect('/');
+    }
 
-/**
- * Create a page
- */
-app.use(route.post('/page/new', function *() {
-  let link = page.new(this.request.body);
+    saveIndex();
+  }));
 
-  this.redirect('/');
+  /**
+   * Edit a page
+   */
+  app.use(route.post('/page/:link/edit', function *(link) {
+    page.test(this.request.body);
+    page.remove(link);
+    let newLink = page.new(this.request.body);
 
-  saveIndex();
-  savePage(link);
-}));
+    this.redirect('/' + link);
 
-/**
- * Delete a page
- */
-app.use(route.post('/page/:link/delete', function *(link) {
-  page.remove(link);
-  this.redirect('/');
+    saveIndex();
+    savePage(newLink);
+  }));
 
-  saveIndex();
-}));
+  /**
+   * Upload an image
+   */
+  app.use(route.post('/upload', function *() {
+    let parts = parse(this);
+    let part;
+    while (part = yield parts) {
+      var stream = fs.createWriteStream(path.join(__dirname, '..', 'static', part.filename));
+      part.pipe(stream);
+    }
 
-/**
- * Edit a page
- */
-app.use(route.post('/page/:link/edit', function *(link) {
-  page.test(this.request.body);
-  page.remove(link);
-  let newLink = page.new(this.request.body);
+    this.body = 'OK';
+  }));
 
-  this.redirect('/');
+  /**
+   * Edit settings
+   */
+  app.use(route.post('/settings', function *() {
+    blog.set(this.request.body);
 
-  saveIndex();
-  savePage(newLink);
-}));
+    this.redirect('/');
 
-/**
- * Upload an image
- */
-app.use(route.post('/upload', function *() {
-  let parts = parse(this);
-  let part;
-  while (part = yield parts) {
-    var stream = fs.createWriteStream(path.join(__dirname, '..', 'static', part.filename));
-    part.pipe(stream);
-  }
-
-  this.body = 'OK';
-}));
-
-/**
- * Edit settings
- */
-app.use(route.post('/settings', function *() {
-  blog.set(this.request.body);
-
-  this.redirect('/');
-
-  saveIndex();
-  saveAllPosts();
-}));
+    saveIndex();
+    saveAllPosts();
+  }));
 
 // api functions
 
-function postPageCnt() {
-  let pagination = db('blog').value().pagination;
-  return Math.ceil(db('posts').size() / pagination);
-}
-
-function saveIndex() {
-  // write index.html
-  let b = blog.info();
-  let p = page.all();
-  let t = postPageCnt();
-
-  save('index', renderStatic.call(this, 'posts', Object.assign(post.list(1), p, b)));
-
-  for (let i = 2; i <= t; ++i) {
-    save('p/' + i, renderStatic.call(this, 'posts', Object.assign(post.list(i), p, b)));
+  function postPageCnt() {
+    let pagination = db('blog').value().pagination;
+    return Math.ceil(db('posts').size() / pagination);
   }
-}
 
-function savePost(link) {
-  // write post/:id.html
-  link = String(link);
-  save('post/' + link, renderStatic('post', Object.assign(post.show(link), blog.info(), {
-    marked
-  })));
-}
+  function saveIndex() {
+    // write index.html
+    let b = blog.info();
+    let p = page.all();
+    let t = postPageCnt();
 
-function saveAllPosts() {
-  let posts = db('posts').value();
+    save('index', renderStatic.call(this, 'posts', Object.assign(post.list(1), p, b)));
 
-  let b = blog.info();
-  for (let p of posts) {
-    save('post/' + p.link, renderStatic('post', Object.assign(b, {
-      post: p,
-            marked
+    for (let i = 2; i <= t; ++i) {
+      save('p/' + i, renderStatic.call(this, 'posts', Object.assign(post.list(i), p, b)));
+    }
+  }
+
+  function savePost(link) {
+    // write post/:id.html
+    link = String(link);
+    save('post/' + link, renderStatic('post', Object.assign(post.show(link), blog.info(), {
+      marked
     })));
   }
-}
 
-function savePage(link) {
-  // write :link.html
-  save('page/' + link, renderStatic('page', Object.assign(blog.info(), page.show(link), {
-    marked
-  })));
-}
+  function saveAllPosts() {
+    let posts = db('posts').value();
+
+    let b = blog.info();
+    for (let p of posts) {
+      save('post/' + p.link, renderStatic('post', Object.assign(b, {
+        post: p,
+              marked
+      })));
+    }
+  }
+
+  function savePage(link) {
+    // write :link.html
+    save('page/' + link, renderStatic('page', Object.assign(blog.info(), page.show(link), {
+      marked
+    })));
+  }
 
 // init db
-if (typeof db.object.blog === 'undefined') {
-  db.object.blog = JSON.parse(fs.readFileSync(path.join(__dirname, 'blog.default.json')));
-}
+  if (typeof db.object.blog === 'undefined') {
+    db.object.blog = JSON.parse(fs.readFileSync(path.join(__dirname, 'blog.default.json')));
+  }
+
+  return app;
+};

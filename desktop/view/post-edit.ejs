@@ -1,0 +1,29 @@
+<div class="margin-bottom">
+  <form id="post_form" method="POST">
+    <article>
+      <input type="text" name="title" placeholder="Title" value="<%= post.title %>" autocomplete="off">
+      <p>
+        <textarea name="content"><%= post.content %></textarea>
+      </p>
+      <p>Insert image (uploaded to "/static" folder): <input class="file-upload upload-finish" style="display: none" type="file">
+      <noscript>sorry, but your browser doesn't support JavaScript.</noscript>
+      </p>
+      <%- plugin.enable && plugin.editorArticleBottom ? plugin.editorArticleBottom() : '' %>
+    </article>
+  </form>
+</div>
+<script src="/static/file-upload.js"></script>
+<%- plugin.enable && plugin.editorBottom ? plugin.editorBottom() : '' %>
+
+
+<footer class="toolbar toolbar-footer">
+  <div class="toolbar-actions">
+    <button class="btn btn-default btn-link" data-link="/post/<%= post.link %>">
+      Cancel
+    </button>
+
+    <button class="btn btn-primary pull-right" onclick="post_form.submit();">
+      Save
+    </button>
+  </div>
+</footer>

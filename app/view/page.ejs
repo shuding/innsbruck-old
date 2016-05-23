@@ -4,7 +4,8 @@
     <% if (!static) { %>
     <a href="/page/<%= page.link %>/edit">edit</a>
     | <a href="javascript:;"
-         onclick='(prompt("Please enter \"OK\" to delete \"<%= page.title %>\":") + "").toUpperCase() == "OK" && delete_form.submit();'>delete</a>
+       onclick='(prompt("Please enter \"OK\" to delete \"<%= page.title %>\":") + "").toUpperCase() == "OK" && delete_form.submit();'
+      >delete</a>
     <% } %>
     </span>
     <p><%- marked(page.content) %></p>

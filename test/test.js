@@ -25,7 +25,7 @@ describe('innsbruck', () => {
       dbPath = null;
     }
 
-    app     = require('../app');
+    app     = require('../app')();
     request = require('supertest').agent(app.listen(3000));
   });
 

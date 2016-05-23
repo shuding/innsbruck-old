@@ -1,0 +1,79 @@
+<header class="toolbar toolbar-header">
+  <h1 class="title">Innsbruck</h1>
+
+  <div class="toolbar-actions">
+    <button class="btn btn-default btn-link" data-link="/">
+      <span class="icon icon-user icon-text"></span>
+      <%= blog.name %>
+    </button>
+
+    <button class="btn btn-default btn-dropdown pull-right">
+      <span class="icon icon-upload-cloud"></span>
+    </button>
+
+    <div class="btn-group pull-right">
+      <button class="btn btn-default">
+        <a href="/index.html" target="_blank">
+          <span class="icon icon-eye"></span>
+        </a>
+      </button>
+      <button class="btn btn-default btn-link" data-link="/settings">
+        <span class="icon icon-cog"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+
+<div class="margin-top margin-bottom">
+  <form id="settings_form" method="POST" action="/settings">
+    <article>
+      <h3>Basic</h3>
+      <div class="input-group">
+        <h5>Blog Name</h5>
+        <p><input type="text" name="name" placeholder="" value="<%= blog.name %>" autocomplete="off"></p>
+      </div>
+      <div class="input-group">
+        <h5>Posts per Page</h5>
+        <p><input type="text" name="pagination" placeholder="1 ≤ P ≤ 100" value="<%= blog.pagination %>" autocomplete="off"></p>
+      </div>
+      <div class="input-group">
+        <h5>Footer Text</h5>
+        <p><input type="text" name="footer" placeholder="Copyright" value="<%= blog.footer %>" autocomplete="off"></p>
+      </div>
+      <div class="input-group">
+        <h5>Post Description</h5>
+        <p><input type="checkbox" name="description" <%- blog.description ? 'checked aria-checked' : '' %>></p>
+      </div>
+      <hr/>
+      <h3>Advanced</h3>
+      <div class="input-group">
+        <h5>Google Analytics</h5>
+        <p><input type="text" name="google-analytics" placeholder="ID" value="<%= blog['google-analytics'] %>"></p>
+      </div>
+      <div class="input-group">
+        <h5>Custom CSS</h5>
+        <p><input type="text" name="css" placeholder="..." value="<%= blog.css %>"></p>
+      </div>
+      <% if (plugin.enable) { %>
+        <hr/>
+        <h3>Plugins</h3>
+        <%- plugin.settings ? plugin.settings() : '' %>
+      <% } %>
+      <br/>
+    </article>
+  </form>
+</div>
+
+
+<footer class="toolbar toolbar-footer">
+  <div class="toolbar-actions">
+    <button class="btn btn-default btn-link" data-link="/">
+      Cancel
+    </button>
+
+    <button class="btn btn-primary pull-right" onclick="settings_form.submit();">
+      Save
+    </button>
+  </div>
+</footer>
