@@ -9,7 +9,7 @@ const fs   = require('fs');
 // lowdb
 const low     = require('lowdb');
 const storage = require('lowdb/file-sync');
-const db      = low('db.json', {storage});
+const db      = low(path.join(__dirname, '..', 'db.json'), {storage});
 
 // markd
 const marked = require('marked');
@@ -62,7 +62,7 @@ module.exports = function (_env) {
     if (this.method != 'GET' || !this.path.match(/^\/static\//g)) {
       return yield next;
     }
-    yield send(this, this.path);
+    yield send(this, path.join(__dirname, '..', this.path));
   });
 
 // preview
@@ -70,7 +70,7 @@ module.exports = function (_env) {
     if (this.method != 'GET' || !this.path.match(/\.html$/g)) {
       return yield next;
     }
-    yield send(this, this.path);
+    yield send(this, path.join(__dirname, '..', this.path));
   });
 
 // routes

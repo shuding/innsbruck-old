@@ -10,5 +10,6 @@ db.backup.json
 /index.html
 /post
 /p
+/build
 
 /static/photon

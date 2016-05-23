@@ -1,7 +1,8 @@
 {
   "name": "innsbruck-blog",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "A static blog generator",
+  "productName": "Innsbruck",
   "main": "index.js",
   "scripts": {
     "start": "if [ $(node --version | grep -c 'v[45]') -eq 1 ]; then node --harmony_sloppy_let --harmony_destructuring --harmony index.js; else node index.js; fi",
