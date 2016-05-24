@@ -7,10 +7,12 @@
 const assert = require('assert');
 
 var db;
+var plugins;
 
 // using only ONE lowdb instance to make sure all data changes were synchronized on all pages
-module.exports.init = _db => {
+module.exports.init = (_db, _plugins) => {
   db = _db;
+  plugins = _plugins;
   return this;
 };
 

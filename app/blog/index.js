@@ -6,9 +6,11 @@
 
 const assert = require('assert');
 var db;
+var plugins;
 
-module.exports.init = _db => {
+module.exports.init = (_db, _plugins) => {
   db = _db;
+  plugins = _plugins;
   return this;
 };
 
@@ -43,6 +45,12 @@ module.exports.set = function (data) {
     css:                css || '',
     plugin:             Object.assign(db.object.blog.plugin || {}, data.plugin || {})
   };
+
+  plugins.forEach(plugin => {
+    if (plugin.hook && plugin.hook.onSetting) {
+      plugin.hook.onSetting();
+    }
+  });
 };
 
 function blogTest(data) {

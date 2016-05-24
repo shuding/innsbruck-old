@@ -24,7 +24,8 @@ const body   = require('koa-body');
 const send   = require('koa-send');
 const parse  = require('co-busboy');
 
-const plugin = require('./plugin')(db);
+const pluginData = require('./plugin')(db);
+const plugin = pluginData.contextFn;
 const { save, generateWp, renderWp } = require('./gen');
 
 const renderDynamic = renderWp(plugin);
@@ -66,7 +67,7 @@ module.exports = function (_env) {
       yield send(this, path.join(__dirname, '..', this.path));
     } else {
       yield send(this, this.path);
-	}
+    }
   });
 
 // preview
@@ -78,13 +79,13 @@ module.exports = function (_env) {
       yield send(this, path.join(__dirname, '..', this.path));
     } else {
       yield send(this, this.path);
-	}
+    }
   });
 
 // routes
-  var blog = require('./blog').init(db);
-  var post = require('./post').init(db);
-  var page = require('./page').init(db);
+  var blog = require('./blog').init(db, pluginData.plugins);
+  var post = require('./post').init(db, pluginData.plugins);
+  var page = require('./page').init(db, pluginData.plugins);
 
 // error handling
   app.use(function *(next) {
@@ -103,8 +104,7 @@ module.exports = function (_env) {
   app.use(route.get('/', function *() {
     if (env.electron) {
       yield renderDynamic.call(this, 'posts', post.all(), page.all(), blog.info(), {env});
-    }
-    else {
+    } else {
       yield renderDynamic.call(this, 'posts', post.list(1), page.all(), blog.info(), {env});
     }
   }));
@@ -151,7 +151,9 @@ module.exports = function (_env) {
       yield renderDynamic.call(this, 'refresh-main', blog.info(), {
         env
       });
-    } else yield next;
+    } else {
+      yield next;
+    }
   }));
 
   app.use(route.get('/:link', function *(link) {
