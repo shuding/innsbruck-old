@@ -21,13 +21,21 @@ A minimal, static, content focused and super light weighted blogging tool. For h
 
 Terminal arguments:
 - Custom port number: `$ node index.js --port=2000`
-- Do not start up in the browser automatically: `$ node index.js -s`
+- Do not open in the browser automatically when starting up: `$ node index.js -s`
 
 ### build with electron (not ready!)
 
+Develop build:
+
 1. Install the latest version of __electron-prebuilt__, which supports ES6: `$ electron -v` >= 1.1.1.
-2. `npm run prebuild-desktop`
-3. `npm run electron`
+2. `$ npm run prebuild-desktop`
+3. `$ npm run electron`
+
+Production build: 
+
+1. Install __electron-packager__ globally: `$ npm i electron-packager -g`
+2. `$ electron-packager . innsbruck --out=build --platform=darwin --arch=x64 --version=1.1.1 --overwrite`
+3. Built app will be in the `build` folder
 
 ## usage (binary application)
 

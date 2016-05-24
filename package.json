@@ -1,6 +1,6 @@
 {
   "name": "innsbruck-blog",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "A static blog generator",
   "productName": "Innsbruck",
   "main": "index.js",
@@ -35,7 +35,6 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "electron-prebuilt": "^1.1.1",
     "mocha": "*",
     "supertest": "^1.2.0"
   }

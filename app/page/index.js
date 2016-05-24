@@ -5,8 +5,13 @@
 'use strict';
 
 var db;
+var plugins;
 
-module.exports.init = _db => { db = _db; return this; };
+module.exports.init = (_db, _plugins) => {
+  db      = _db;
+  plugins = _plugins;
+  return this;
+};
 
 module.exports.all = function () {
   return {
@@ -53,8 +58,8 @@ module.exports.test = function (data) {
 };
 
 function pageTest(data) {
-  let title   = data.title;
-  let link    = data.link;
+  let title = data.title;
+  let link  = data.link;
 
   if (!title || !title.length) {
     throw new Error('Page title cannot be empty!');
