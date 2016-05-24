@@ -11,7 +11,7 @@ var plugins;
 
 // using only ONE lowdb instance to make sure all data changes were synchronized on all pages
 module.exports.init = (_db, _plugins) => {
-  db = _db;
+  db      = _db;
   plugins = _plugins;
   return this;
 };
@@ -72,6 +72,8 @@ module.exports.new = function (data, _id) {
     plugin: data.plugin || {}
   });
 
+  plugins.forEach(plugin => plugin.hook && plugin.hook.onNewPost && plugin.hook.onNewPost());
+
   return id;
 };
 
@@ -81,6 +83,30 @@ module.exports.new = function (data, _id) {
  */
 module.exports.remove = function (link) {
   postRemove(link);
+
+  plugins.forEach(plugin => plugin.hook && plugin.hook.onRemovePost && plugin.hook.onRemovePost());
+};
+
+/**
+ * Edit a post by link
+ */
+module.exports.edit = function (link, data) {
+  postTest(data);
+  postRemove(link);
+
+  let title   = data.title;
+  let content = data.content;
+
+  db.object.id = link;
+  db('posts').push({
+            title,
+            content,
+    link:   '' + link,
+    time:   (new Date()).getTime(),
+    plugin: data.plugin || {}
+  });
+
+  plugins.forEach(plugin => plugin.hook && plugin.hook.onEditPost && plugin.hook.onEditPost());
 };
 
 /**

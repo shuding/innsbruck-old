@@ -72,7 +72,7 @@ module.exports = function (_env) {
 
 // preview
   app.use(function *(next) {
-    if (this.method != 'GET' || !this.path.match(/\.html$/g)) {
+    if (this.method != 'GET' || (!this.path.match(/\.html$/g) && !this.path.match(/\.xml$/g))) {
       return yield next;
     }
     if (env.electron) {
@@ -199,9 +199,7 @@ module.exports = function (_env) {
    * Edit a post
    */
   app.use(route.post('/post/:link/edit', function *(link) {
-    post.test(this.request.body);
-    post.remove(link);
-    post.new(this.request.body, link);
+    post.edit(link, this.request.body);
 
     this.redirect('/post/' + link);
 
