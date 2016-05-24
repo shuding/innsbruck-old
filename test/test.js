@@ -35,6 +35,11 @@ describe('innsbruck', () => {
         .get('/')
         .expect(200, done);
     });
+    it('should host static files', done => {
+	  request
+        .get('/static/style.css')
+        .expect(200, done);
+    });
   });
 
   describe('post', () => {

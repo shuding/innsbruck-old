@@ -62,7 +62,11 @@ module.exports = function (_env) {
     if (this.method != 'GET' || !this.path.match(/^\/static\//g)) {
       return yield next;
     }
-    yield send(this, path.join(__dirname, '..', this.path));
+    if (env.electron) {
+      yield send(this, path.join(__dirname, '..', this.path));
+    } else {
+      yield send(this, this.path);
+	}
   });
 
 // preview
@@ -70,7 +74,11 @@ module.exports = function (_env) {
     if (this.method != 'GET' || !this.path.match(/\.html$/g)) {
       return yield next;
     }
-    yield send(this, path.join(__dirname, '..', this.path));
+    if (env.electron) {
+      yield send(this, path.join(__dirname, '..', this.path));
+    } else {
+      yield send(this, this.path);
+	}
   });
 
 // routes
