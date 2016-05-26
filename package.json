@@ -1,6 +1,6 @@
 {
   "name": "innsbruck-blog",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "A static blog generator",
   "productName": "Innsbruck",
   "main": "index.js",
@@ -8,7 +8,8 @@
     "start": "if [ $(node --version | grep -c 'v[45]') -eq 1 ]; then node --harmony_sloppy_let --harmony_destructuring --harmony index.js; else node index.js; fi",
     "test": "if [ $(node --version | grep -c 'v[45]') -eq 1 ]; then mocha -- --harmony_sloppy_let --harmony_destructuring; else mocha; fi",
     "prebuild-desktop": "sh install.sh",
-    "electron": "electron ./desktop"
+    "electron": "electron ./desktop",
+    "build-desktop": "electron-packager . innsbruck --out=pack --platform=darwin --arch=x64 --version=1.1.1 --overwrite"
   },
   "repository": {
     "type": "git",

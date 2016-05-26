@@ -47,11 +47,12 @@ module.exports = function (_env) {
     }
     fs.readdirSync(path.join(fileRoot, 'static'))
       .forEach(staticFile => {
-        if (!fs.existsSync(path.join(env.root, 'static', staticFile))) {
-          fs.createReadStream(path.join(fileRoot, 'static', staticFile))
-            .pipe(fs.createWriteStream(path.join(env.root, 'static', staticFile)));
-          console.log('Copying dependence file ' + staticFile + ' into /export...');
-        }
+        if (/\.(css|js|gif|png|jpg|jpeg|bmp)$/.test(staticFile))
+          if (!fs.existsSync(path.join(env.root, 'static', staticFile))) {
+            fs.createReadStream(path.join(fileRoot, 'static', staticFile))
+              .pipe(fs.createWriteStream(path.join(env.root, 'static', staticFile)));
+            console.log('Copying dependence file ' + staticFile + ' into /export...');
+          }
       });
     // all synchronous operations above!
   }

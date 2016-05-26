@@ -11,5 +11,6 @@ db.backup.json
 /post
 /p
 /build
-
+/pack
 /static/photon
+/export
