@@ -1,6 +1,6 @@
 {
   "name": "innsbruck-blog",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A static blog generator",
   "productName": "Innsbruck",
   "main": "index.js",

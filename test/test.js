@@ -58,8 +58,8 @@ describe('innsbruck', () => {
         })
         .expect(302, done);
     });
-    it('should have created a new html file', () => {
-      let filePath = path.join(__dirname, '..', 'post', '1.html');
+    it('should have created (a sample post and) a new html file', () => {
+      let filePath = path.join(__dirname, '..', 'post', '2.html');
       assert(fs.existsSync(filePath));
       assert(fs.readFileSync(filePath).toString().includes(CONTENT));
     });
@@ -71,7 +71,7 @@ describe('innsbruck', () => {
         })
         .expect(200, () => {
           request
-            .get('/post/1')
+            .get('/post/2')
             .expect(res => {
               assert(res.text.includes(CONTENT));
             })
