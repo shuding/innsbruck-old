@@ -1,4 +1,16 @@
-<div class="margin-bottom">
+<header class="toolbar toolbar-header toolbar-transparent">
+  <div class="toolbar-actions">
+    <button class="btn btn-default btn-link" data-link="/<%= page.link %>">
+      Cancel
+    </button>
+
+    <button class="btn btn-primary pull-right" onclick="page_form.submit();">
+      Save
+    </button>
+  </div>
+</header>
+
+<div class="post-view">
   <form id="page_form" action="/page/<%= page.link %>/edit" method="POST">
     <article>
       <h2><input type="text" name="title" placeholder="Title" autocomplete="off" value="<%= page.title %>"></h2>
@@ -19,16 +31,3 @@
 </div>
 <script src="/static/file-upload.js"></script>
 <%- plugin.enable && plugin.editorBottom ? plugin.editorBottom() : '' %>
-
-
-<footer class="toolbar toolbar-footer">
-  <div class="toolbar-actions">
-    <button class="btn btn-default btn-link" data-link="/<%= page.link %>">
-      Cancel
-    </button>
-
-    <button class="btn btn-primary pull-right" onclick="page_form.submit();">
-      Save
-    </button>
-  </div>
-</footer>

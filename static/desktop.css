@@ -1,29 +1,24 @@
 body {
   margin: 0;
-  padding: 40px;
   min-height: 100vh;
   overflow: scroll;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif !important;
+  background-color: white;
 }
-
 a, a:visited {
-  color: #ccc;
+  color: #237AFF;
   text-decoration: none;
 }
-
 button a {
   color: initial;
   text-decoration: none;
 }
-
 button {
   color: #5A5A5A;
 }
-
 article h2, h1.blog-name {
   margin-top: 0;
 }
-
 iframe {
   position: absolute;
   left: 0;
@@ -31,28 +26,32 @@ iframe {
   border: none;
   width: 100%;
   height: 100%;
+  background-color: white;
 }
-
+#frame {
+  padding: 55px 0 22px 0;
+  background: url(/static/spinner.gif) no-repeat center white;
+}
 img {
   max-width: 100%;
 }
-
 .margin-top {
   margin-top: 50px;
 }
-
 .margin-bottom {
   margin-bottom: 20px;
 }
-
+.post-view {
+  margin: 50px 20px 40px 20px;
+  font-size: 110%;
+}
 .btn-primary .icon,
 .btn-positive .icon,
 .btn-negative .icon,
 .btn-warning .icon {
-  color: #fff;
+  color: #FFF;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
-
 .toolbar-header {
   position: fixed;
   width: 100%;
@@ -61,7 +60,6 @@ img {
   z-index: 999;
   -webkit-app-region: drag;
 }
-
 .toolbar-footer {
   position: fixed;
   width: 100%;
@@ -69,12 +67,44 @@ img {
   bottom: 0;
   z-index: 999;
 }
-
+.toolbar-transparent {
+  background: rgba(249, 249, 249, 0.95);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+}
 .wrap {
   white-space: normal;
 }
-
-.pane-group {
-  top: 55px;
-  bottom: 22px;
+#i-confirm {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 200px;
+  height: 200px;
+}
+#i-confirm:before {
+  content: '';
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+#i-confirm h1 {
+  padding: 20px 0;
+  font-size: 14px;
+}
+#i-confirm .toolbar {
+  position: fixed;
+  z-index: 999;
+  width: inherit;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+  border: 1px solid #585858;
+  border-radius: 6px;
 }

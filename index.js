@@ -5,8 +5,8 @@
 "use strict";
 
 // entry point here
-const opener = require('opener');
-const app    = require('./app')();
+const open = require("open");
+const app  = require('./app')();
 
 var PORT   = 3000;
 var SILENT = false;
@@ -25,6 +25,6 @@ process.argv.forEach(val => {
 app.listen(PORT, err => {
   console.log('Innsbruck running on port ' + PORT);
   if (!SILENT) {
-    opener('http://localhost' + (PORT == 80 ? '' : ':' + PORT));
+    open('http://localhost' + (PORT == 80 ? '' : ':' + PORT));
   }
 });

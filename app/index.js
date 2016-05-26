@@ -5,6 +5,7 @@
 
 const path = require('path');
 const fs   = require('fs');
+const open = require("open");
 
 // lowdb
 const low     = require('lowdb');
@@ -24,26 +25,43 @@ const body   = require('koa-body');
 const send   = require('koa-send');
 const parse  = require('co-busboy');
 
-const pluginData = require('./plugin')(db);
-const plugin = pluginData.contextFn;
-const { save, generateWp, renderWp } = require('./gen');
-
-const renderDynamic = renderWp(plugin);
-const renderStatic  = generateWp(plugin);
-
 module.exports = function (_env) {
   "use strict";
   var env = {
-    electron: false
+    electron: false,
+    root: path.join(__dirname, '..') // export path
   };
 
-  if (_env) {
-    for (let k in _env) {
-      if (_env.hasOwnProperty(k)) {
-        env[k] = _env[k];
-      }
+  Object.assign(env, _env); // overwrite environments
+
+  if (env.electron) {
+    // prepare the export path
+    let fileRoot = env.root;
+
+    env.root = path.join(fileRoot, 'export');
+    if (!fs.existsSync(env.root)) {
+      fs.mkdirSync(env.root);
     }
+    if (!fs.existsSync(path.join(env.root, 'static'))) {
+      fs.mkdirSync(path.join(env.root, 'static'));
+    }
+    fs.readdirSync(path.join(fileRoot, 'static'))
+      .forEach(staticFile => {
+        if (!fs.existsSync(path.join(env.root, 'static', staticFile))) {
+          fs.createReadStream(path.join(fileRoot, 'static', staticFile))
+            .pipe(fs.createWriteStream(path.join(env.root, 'static', staticFile)));
+          console.log('Copying dependence file ' + staticFile + ' into /export...');
+        }
+      });
+    // all synchronous operations above!
   }
+
+  const pluginData = require('./plugin')(db, env.root);
+  const plugin     = pluginData.contextFn;
+  const { save, generateWp, renderWp } = require('./gen')(env.root);
+
+  const renderDynamic = renderWp(plugin);
+  const renderStatic  = generateWp(plugin);
 
   var app = koa();
 
@@ -64,7 +82,7 @@ module.exports = function (_env) {
       return yield next;
     }
     if (env.electron) {
-      yield send(this, path.join(__dirname, '..', this.path));
+      yield send(this, this.path, {root: env.root});
     } else {
       yield send(this, this.path);
     }
@@ -76,7 +94,7 @@ module.exports = function (_env) {
       return yield next;
     }
     if (env.electron) {
-      yield send(this, path.join(__dirname, '..', this.path));
+      yield send(this, this.path, {root: env.root});
     } else {
       yield send(this, this.path);
     }
@@ -146,15 +164,15 @@ module.exports = function (_env) {
     });
   }));
 
-  app.use(route.get('/refresh-main', function *(next) {
-    if (env.electron) {
-      yield renderDynamic.call(this, 'refresh-main', blog.info(), {
-        env
-      });
-    } else {
-      yield next;
-    }
-  }));
+  if (env.electron) {
+    app.use(route.get('/frame', function *() {
+      yield renderDynamic.call(this, 'frame', blog.info(), {env});
+    }));
+
+    app.use(route.post('/export', function *() {
+      open(env.root);
+    }));
+  }
 
   app.use(route.get('/:link', function *(link) {
     if (db('pages').find({link})) {
@@ -276,6 +294,7 @@ module.exports = function (_env) {
 
     saveIndex();
     saveAllPosts();
+    saveAllPages();
   }));
 
 // api functions
@@ -318,6 +337,17 @@ module.exports = function (_env) {
     }
   }
 
+  function saveAllPages() {
+    let pages = db('pages').value();
+
+    let b = blog.info();
+    for (let p of pages) {
+      save('page/' + p.link, renderStatic('page', Object.assign(b, page.show(p.link), {
+        marked
+      })));
+    }
+  }
+
   function savePage(link) {
     // write :link.html
     save('page/' + link, renderStatic('page', Object.assign(blog.info(), page.show(link), {
@@ -325,10 +355,15 @@ module.exports = function (_env) {
     })));
   }
 
-// init db
+  // init db
   if (typeof db.object.blog === 'undefined') {
-    db.object.blog = JSON.parse(fs.readFileSync(path.join(__dirname, 'blog.default.json')));
+    db.object = JSON.parse(fs.readFileSync(path.join(__dirname, 'default.json')));
   }
+
+  // init static files
+  saveIndex();
+  saveAllPosts();
+  saveAllPages();
 
   return app;
 };

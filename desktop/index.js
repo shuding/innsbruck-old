@@ -27,7 +27,7 @@ function createWindow() {
   });
   app.listen(3000, () => {
     "use strict";
-    win.loadURL(`http://localhost:3000`);
+    win.loadURL(`http://localhost:3000/frame`);
   });
 
   //win.webContents.openDevTools();

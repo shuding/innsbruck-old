@@ -1,5 +1,18 @@
 
-<div class="post-view margin-bottom">
+<header class="toolbar toolbar-header toolbar-transparent">
+  <div class="toolbar-actions">
+    <button class="btn btn-default" onclick='iconfirm("Delete <%= post.title %>?", function () { delete_form.submit(); window.parent.location.reload(); })'>
+      <span class="icon icon-trash"></span>
+    </button>
+
+    <button class="btn btn-default btn-link pull-right" data-link="/post/<%= post.link %>/edit">
+      <span class="icon icon-pencil icon-text"></span>
+      Edit
+    </button>
+  </div>
+</header>
+
+<div class="post-view">
   <article>
 
     <h2 class="wrap"><%= post.title %></h2>
@@ -13,16 +26,3 @@
 
   <form id="delete_form" style="display: none" method="POST" action="/post/<%= post.link %>/delete"></form>
 </div>
-
-<footer class="toolbar toolbar-footer">
-  <div class="toolbar-actions">
-    <button class="btn btn-default" onclick='window.top.postMessage("confirm(\"Delete <%= post.title %>?\")", "*"); window.onmessage = function (e) { if (e.data == "true") delete_form.submit() };'>
-      <span class="icon icon-trash"></span>
-    </button>
-
-    <button class="btn btn-default btn-link pull-right" data-link="/post/<%= post.link %>/edit">
-      <span class="icon icon-pencil icon-text"></span>
-      Edit
-    </button>
-  </div>
-</footer>

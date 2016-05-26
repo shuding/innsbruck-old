@@ -8,8 +8,9 @@
 const fs   = require('fs');
 const path = require('path');
 
-module.exports = function (db) {
+module.exports = function (db, rootDir) {
   // include all plugins
+
   const pluginDir = path.join(__dirname, '..', 'plugin');
   const plugins   = fs
     .readdirSync(pluginDir)
@@ -17,7 +18,7 @@ module.exports = function (db) {
     .map(filename => require(path.join('..', 'plugin', filename)));
 
   // init all plugins
-  plugins.forEach(plugin => (plugin.init && plugin.init(db)));
+  plugins.forEach(plugin => (plugin.init && plugin.init(db, rootDir)));
 
   return {
     plugins:   plugins,

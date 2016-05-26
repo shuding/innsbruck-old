@@ -1,0 +1,30 @@
+{
+  "blog": {
+    "name": "innsbruck",
+    "footer": "Copyright 2016. Powered by Innsbruck.",
+    "pagination": 10,
+    "description": true,
+    "google-analytics": "",
+    "css": "",
+    "plugin": {
+    }
+  },
+  "posts": [
+    {
+      "title": "hello, world",
+      "content": "Welcome to Innsbruck. This is a _sample_ post in MarkDown. ",
+      "link": "1",
+      "time": 1464228671625,
+      "plugin": {}
+    }
+  ],
+  "pages": [
+    {
+      "title": "About",
+      "content": "Welcome to Innsbruck. This is a _sample_ page in MarkDown. ",
+      "link": "about",
+      "order": 0
+    }
+  ],
+  "id": 1
+}
