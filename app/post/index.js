@@ -49,67 +49,106 @@ module.exports.show = function (link) {
   };
 };
 
+
+
+let generate_post = function (data) {
+  postTest(data);
+
+  let title = data.title;
+  let link = data.link;
+  let content = data.content;
+
+  // to keep postTest compatible , have to test in module.exports.new
+  if (!link || !link.length) {
+    throw new Error('Post link cannot be empty!');
+  }
+
+  if (['post', 'p', 'style', 'static', 'index', 'preview'].includes(link) || !/^[a-zA-Z0-9_]+$/.test(link)) {
+    throw new Error('Illegal link!');
+  }
+
+  return {
+    title:  title,
+    content:content,
+    link:   link,
+    plugin: data.plugin || {}
+  };
+
+};
+
+
 /**
  * Create a new post
  * @param data `= request.body`
  * @param _id optional
  * @returns id
  */
-module.exports.new = function (data, _id) {
-  postTest(data);
+module.exports.new = function (data) {
+  let raw_post = generate_post(data);
+  let title   = raw_post.title;
+  let link = raw_post.link;
+  let content = raw_post.content;
+  let plugin = raw_post.plugin;
 
-  let title   = data.title;
-  let content = data.content;
+  if (db('posts').find({link})) {
+    throw new Error('This link already exists!');
+  }
 
-  let id = _id || (+db.object.id || 0) + 1;
-
-  db.object.id = id;
   db('posts').push({
             title,
             content,
-    link:   '' + id,
+    link:   link,
     time:   (new Date()).getTime(),
-    plugin: data.plugin || {}
+    plugin: plugin
   });
 
   plugins.forEach(plugin => plugin.hook && plugin.hook.onNewPost && plugin.hook.onNewPost());
 
-  return id;
+  return link;
+};
+
+
+module.exports.edit = function (link, data) {
+  let time = post(link).time;
+  let raw_post = generate_post(data);
+  remove(link);
+
+
+
+  let title = raw_post.title;
+  let newLink  = raw_post.link;
+  let content = raw_post.content;
+  let plugin = raw_post.plugin;
+
+  db('posts').push({
+            title,
+            content,
+    link:   newLink,
+    time:   time,
+    plugin: plugin
+
+  });
+
+  plugins.forEach(plugin => plugin.hook && plugin.hook.onEditPost && plugin.hook.onEditPost());
+
+  return newLink;
 };
 
 /**
  * Remove a post by link
  * @param link
  */
-module.exports.remove = function (link) {
+
+
+function remove(link) {
   postRemove(link);
 
   plugins.forEach(plugin => plugin.hook && plugin.hook.onRemovePost && plugin.hook.onRemovePost());
-};
+}
 
-/**
- * Edit a post by link
- */
-module.exports.edit = function (link, data) {
-  postTest(data);
-  postRemove(link);
+module.exports.remove = remove;
 
-  let title   = data.title;
-  let content = data.content;
-
-  db.object.id = link;
-  db('posts').push({
-            title,
-            content,
-    link:   '' + link,
-    time:   (new Date()).getTime(),
-    plugin: data.plugin || {}
-  });
-
-  plugins.forEach(plugin => plugin.hook && plugin.hook.onEditPost && plugin.hook.onEditPost());
-};
-
-/**
+  /**
  * Test the legitimacy of data
  * @param data
  */
