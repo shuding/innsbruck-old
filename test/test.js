@@ -9,6 +9,7 @@ const fs     = require('fs');
 const path   = require('path');
 
 const TITLE   = 'Sample Title';
+const LINK = 'sample_title';
 const CONTENT = 'Your time is limited, so don’t waste it living someone else’s life.';
 
 describe('innsbruck', () => {
@@ -54,12 +55,15 @@ describe('innsbruck', () => {
         .type('form')
         .send({
           title:   TITLE,
+          link: LINK,
           content: CONTENT
         })
         .expect(302, done);
     });
+
+
     it('should have created (a sample post and) a new html file', () => {
-      let filePath = path.join(__dirname, '..', 'post', '2.html');
+      let filePath = path.join(__dirname, '..', 'post', LINK + '.html');
       assert(fs.existsSync(filePath));
       assert(fs.readFileSync(filePath).toString().includes(CONTENT));
     });
@@ -71,7 +75,7 @@ describe('innsbruck', () => {
         })
         .expect(200, () => {
           request
-            .get('/post/2')
+            .get('/post/' + LINK)
             .expect(res => {
               assert(res.text.includes(CONTENT));
             })

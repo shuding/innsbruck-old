@@ -218,13 +218,12 @@ module.exports = function (_env) {
    * Edit a post
    */
   app.use(route.post('/post/:link/edit', function *(link) {
-    post.edit(link, this.request.body);
+    let newLink = post.edit(link, this.request.body);
 
-    this.redirect('/post/' + link);
+    this.redirect('/post/' + newLink);
 
-    // write index.html
     saveIndex();
-    savePost(link);
+    savePost(newLink);
   }));
 
   /**
